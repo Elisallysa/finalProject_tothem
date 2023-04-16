@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "652487877880",
+    "project_id": "tothem-app",
+    "storage_bucket": "tothem-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:652487877880:android:38badaa88985a06073470d",
+        "android_client_info": {
+          "package_name": "com.example.tothem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "652487877880-1379tbge2oie9hnkk1nicgftm9bfj0uu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDT_z5Mrjyx84eYKPDHzEidW69qlb3vrbY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "652487877880-1379tbge2oie9hnkk1nicgftm9bfj0uu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "652487877880-cq11fb7bv3951cv40eenucabgfi25n5g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tothem"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
