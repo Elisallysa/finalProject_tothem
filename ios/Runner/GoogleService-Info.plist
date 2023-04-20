@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>652487877880-cq11fb7bv3951cv40eenucabgfi25n5g.apps.googleusercontent.com</string>
+	<string>652487877880-s27mig40ut982g7gt0d4ltu7bfv1tl9f.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.652487877880-cq11fb7bv3951cv40eenucabgfi25n5g</string>
+	<string>com.googleusercontent.apps.652487877880-s27mig40ut982g7gt0d4ltu7bfv1tl9f</string>
 	<key>API_KEY</key>
 	<string>AIzaSyAIiaCGDPuO8rkX461GkZSDl3amaz2PL6A</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.tothem</string>
+	<string>edu.erovicodes.tothemapp</string>
 	<key>PROJECT_ID</key>
 	<string>tothem-app</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:652487877880:ios:f1244863ad9d7fe673470d</string>
+	<string>1:652487877880:ios:f840c000796bf94073470d</string>
 </dict>
 </plist>

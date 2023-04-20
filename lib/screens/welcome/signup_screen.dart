@@ -5,31 +5,36 @@ import 'package:tothem/theme/tothem_theme.dart';
 import 'bloc/welcome_blocs.dart';
 import 'bloc/welcome_states.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class Signup extends StatefulWidget {
+  const Signup({Key? key}) : super(key: key);
 
   @override
-  State<Login> createState() => _LoginState();
+  State<Signup> createState() => _SignupState();
 }
 
-class _LoginState extends State<Login> {
+class _SignupState extends State<Signup> {
+  final GlobalKey<FormState> myFormKey = GlobalKey<FormState>();
+
+  final Map<String, String> formValues = {'email': '', 'password': ''};
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: myFormKey,
       body: BlocBuilder<WelcomeBloc, WelcomeState>(builder: (context, state) {
         return SafeArea(
             child: Scaffold(
                 backgroundColor: TothemTheme.lightGreen,
                 body: SingleChildScrollView(
-                    child: buildLoginComponents(context))));
+                    child: buildSigninComponents(context))));
       }),
     );
   }
 }
 
-Widget buildLoginComponents(BuildContext context) {
+Widget buildSigninComponents(BuildContext context) {
   return Column(children: [
-    buildUpperBox(context, 0.30, '7.png'),
-    buildLowerBox(context, Colors.white, false, 'Iniciar sesión')
+    buildUpperBox(context, 0.30, '9.png'),
+    buildLowerBox(context, Colors.white, false, 'Regístrate')
   ]);
 }

@@ -12,7 +12,7 @@ SizedBox buildUpperBox(
 }
 
 Container buildLowerBox(
-    BuildContext context, Color color, bool wrongCredentials) {
+    BuildContext context, Color color, bool wrongCredentials, String title) {
   return Container(
     decoration: BoxDecoration(
         color: color,
@@ -23,37 +23,7 @@ Container buildLowerBox(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 15.h),
-          Text('Iniciar sesión', style: TothemTheme.title),
-          SizedBox(height: 10.h),
-          _reusableTextField(
-              labelText: 'Email',
-              hintText: 'usuario@mail.com',
-              icon: const Icon(Tothem.mail)),
-          SizedBox(
-            height: 25.h,
-          ),
-          _reusableTextField(
-              labelText: 'Contraseña',
-              hintText: 'Introduzca su contraseña',
-              icon: const Icon(Tothem.lock)),
-          Container(
-            margin: EdgeInsets.only(top: 10.h),
-            child: Visibility(
-              visible: wrongCredentials,
-              child: const Text(
-                'Usuario o contraseña erróneos.',
-                style: TextStyle(fontSize: 12, color: TothemTheme.silver),
-              ),
-            ),
-          ),
-          _reusableClickableText(
-              alignment: Alignment.bottomRight,
-              text: '¿Has olvidado tu contraseña?',
-              height: 40.h),
-          SizedBox(
-            height: 20.h,
-          ),
+          _reusableForm(wrongCredentials: wrongCredentials, title: title),
           ElevatedButton(
               style: OutlinedButton.styleFrom(
                 backgroundColor: TothemTheme.accentPink,
@@ -64,7 +34,7 @@ Container buildLowerBox(
                 fixedSize: const Size(double.maxFinite, 50),
               ),
               onPressed: () {},
-              child: Text('Iniciar sesión', style: TothemTheme.buttonTextW)),
+              child: Text(title, style: TothemTheme.buttonTextW)),
           SizedBox(
             height: 20.h,
           ),
@@ -104,7 +74,10 @@ Container buildLowerBox(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Image.asset('assets/icons/google24.png'),
-                  Text('Iniciar sesión con Google',
+                  Text(
+                      title.contains('Iniciar')
+                          ? 'Iniciar sesión con Google'
+                          : 'Regístrate con Google',
                       style: TothemTheme.buttonTextB),
                 ],
               )),
@@ -113,10 +86,65 @@ Container buildLowerBox(
           ),
           _reusableClickableText(
               alignment: Alignment.topCenter,
-              text: '¿Nuevo usuario? Regístrate',
-              height: 30.h),
+              text: title.contains('Iniciar')
+                  ? '¿Nuevo usuario? Regístrate'
+                  : 'Volver al inicio de sesión',
+              height: 30.h,
+              context: context),
         ],
       ),
+    ),
+  );
+}
+
+Form _reusableForm({required String title, required bool wrongCredentials}) {
+  return Form(
+    child: Column(
+      children: [
+        SizedBox(height: 15.h),
+        Container(
+            alignment: Alignment.centerLeft,
+            child: Text(title, style: TothemTheme.title)),
+        SizedBox(height: 10.h),
+        _reusableTextField(
+            labelText: 'Email',
+            hintText: 'usuario@mail.com',
+            icon: const Icon(Tothem.mail)),
+        SizedBox(
+          height: 20.h,
+        ),
+        _reusableTextField(
+            labelText: 'Contraseña',
+            hintText: 'Introduce su contraseña',
+            icon: const Icon(Tothem.lock)),
+        SizedBox(
+          height: 20.h,
+        ),
+        Visibility(
+          visible: title == 'Regístrate',
+          child: Column(children: [
+            _reusableTextField(
+                labelText: 'Repite la contraseña',
+                hintText: 'Repite tu contraseña',
+                icon: const Icon(Tothem.lock)),
+            SizedBox(
+              height: 20.h,
+            )
+          ]),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 10.h),
+          child: Visibility(
+            visible: wrongCredentials,
+            child: Text(
+              title.contains('Iniciar')
+                  ? 'Usuario o contraseña erróneos.'
+                  : 'Revisa tus credenciales.',
+              style: const TextStyle(fontSize: 12, color: TothemTheme.silver),
+            ),
+          ),
+        ),
+      ],
     ),
   );
 }
@@ -124,7 +152,10 @@ Container buildLowerBox(
 TextField _reusableTextField(
     {required String labelText, required String hintText, required Icon icon}) {
   return TextField(
-    obscureText: true,
+    obscureText: labelText == 'Contraseña' ? true : false,
+    keyboardType: labelText == 'Email'
+        ? TextInputType.emailAddress
+        : TextInputType.multiline,
     decoration: InputDecoration(
         icon: icon,
         labelText: labelText,
@@ -136,13 +167,21 @@ TextField _reusableTextField(
 Container _reusableClickableText(
     {required Alignment alignment,
     required String text,
-    required double height}) {
+    required double height,
+    required BuildContext context}) {
   return Container(
     height: height,
     alignment: alignment,
-    child: GestureDetector(
-      onTap: () {},
-      child: Text(text, style: TothemTheme.clickableText),
-    ),
+    child: TextButton(
+        child: Text(text, style: TothemTheme.clickableText),
+        onPressed: () {
+          if (text.contains('olvidado')) {
+            Navigator.pushReplacementNamed(context, '/forgotPwd');
+          } else if (text.contains('inicio')) {
+            Navigator.pushReplacementNamed(context, '/login');
+          } else {
+            Navigator.pushReplacementNamed(context, '/signin');
+          }
+        }),
   );
 }

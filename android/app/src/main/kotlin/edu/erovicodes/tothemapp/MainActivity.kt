@@ -1,4 +1,4 @@
-package com.example.tothem
+package edu.erovicodes.tothemapp
 
 import io.flutter.embedding.android.FlutterActivity
 

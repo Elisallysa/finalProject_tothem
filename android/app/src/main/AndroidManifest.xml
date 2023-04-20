@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.tothem">
+    package="edu.erovicodes.tothemapp">
    <application
         android:label="tothem"
         android:name="${applicationName}"

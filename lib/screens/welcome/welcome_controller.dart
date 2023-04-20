@@ -6,6 +6,7 @@ import 'package:tothem/screens/welcome/bloc/welcome_blocs.dart';
 class WelcomeController {
   final BuildContext context;
   const WelcomeController({required this.context});
+
   Future<void> handleSignIn(String type) async {
     try {
       if (type == "mail") {
