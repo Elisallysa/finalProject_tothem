@@ -12,7 +12,12 @@ SizedBox buildUpperBox(
 }
 
 Container buildLowerBox(
-    BuildContext context, Color color, bool wrongCredentials, String title) {
+    BuildContext context,
+    Color color,
+    bool wrongCredentials,
+    String title,
+    void Function(String value)? mailFunction,
+    void Function(String value)? pwdFunction) {
   return Container(
     decoration: BoxDecoration(
         color: color,
@@ -23,7 +28,11 @@ Container buildLowerBox(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _reusableForm(wrongCredentials: wrongCredentials, title: title),
+          _reusableForm(
+              wrongCredentials: wrongCredentials,
+              title: title,
+              mailFunction: mailFunction,
+              pwdFunction: pwdFunction),
           ElevatedButton(
               style: OutlinedButton.styleFrom(
                 backgroundColor: TothemTheme.accentPink,
@@ -97,7 +106,11 @@ Container buildLowerBox(
   );
 }
 
-Form _reusableForm({required String title, required bool wrongCredentials}) {
+Form _reusableForm(
+    {required String title,
+    required bool wrongCredentials,
+    void Function(String value)? mailFunction,
+    required void Function(String value)? pwdFunction}) {
   return Form(
     child: Column(
       children: [
@@ -109,14 +122,16 @@ Form _reusableForm({required String title, required bool wrongCredentials}) {
         _reusableTextField(
             labelText: 'Email',
             hintText: 'usuario@mail.com',
-            icon: const Icon(Tothem.mail)),
+            icon: const Icon(Tothem.mail),
+            function: (value) => mailFunction!(value)),
         SizedBox(
           height: 20.h,
         ),
         _reusableTextField(
             labelText: 'Contraseña',
             hintText: 'Introduce su contraseña',
-            icon: const Icon(Tothem.lock)),
+            icon: const Icon(Tothem.lock),
+            function: (value) => pwdFunction!(value)),
         SizedBox(
           height: 20.h,
         ),
@@ -126,7 +141,8 @@ Form _reusableForm({required String title, required bool wrongCredentials}) {
             _reusableTextField(
                 labelText: 'Repite la contraseña',
                 hintText: 'Repite tu contraseña',
-                icon: const Icon(Tothem.lock)),
+                icon: const Icon(Tothem.lock),
+                function: (value) => pwdFunction!(value)),
             SizedBox(
               height: 20.h,
             )
@@ -150,8 +166,12 @@ Form _reusableForm({required String title, required bool wrongCredentials}) {
 }
 
 TextField _reusableTextField(
-    {required String labelText, required String hintText, required Icon icon}) {
+    {required String labelText,
+    required String hintText,
+    required Icon icon,
+    required void Function(String value) function}) {
   return TextField(
+    onChanged: (value) => function(value),
     obscureText: labelText == 'Contraseña' ? true : false,
     keyboardType: labelText == 'Email'
         ? TextInputType.emailAddress

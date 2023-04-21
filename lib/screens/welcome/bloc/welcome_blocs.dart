@@ -10,10 +10,12 @@ class WelcomeBloc extends Bloc<WelcomeEvent, WelcomeState> {
   }
 
   void _mailEvent(MailEvent event, Emitter<WelcomeState> emit) {
+    print('myemail is ${event.mail}');
     emit(state.copyWith(mail: event.mail));
   }
 
   void _pwdEvent(PwdEvent event, Emitter<WelcomeState> emit) {
+    print('my pass is ${event.password}');
     emit(state.copyWith(password: event.password));
   }
 }
