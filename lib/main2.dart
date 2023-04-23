@@ -28,16 +28,17 @@ class TothemApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AuthService())
       ],
       child: ScreenUtilInit(
-          builder: (context, child) => MaterialApp(
-                debugShowCheckedModeBanner: false,
-                title: 'tothem',
-                initialRoute: '/signin',
-                //home: const Login(),
-                routes: {
-                  '/login': (_) => const Login(),
-                  '/signin': (_) => const Signup()
-                },
-              )),
+        builder: (context, child) => MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'tothem',
+            initialRoute: '/signin',
+            //home: const Login(),
+            routes: {
+              '/login': (_) => const Login(),
+              '/signin': (_) => const Signup()
+            },
+            theme: TothemTheme.getTothemTheme()),
+      ),
     );
   }
 }

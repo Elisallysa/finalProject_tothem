@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tothem/screens/welcome/bloc/welcome_events.dart';
-import 'package:tothem/screens/welcome/widgets/login_widgets.dart';
-import 'package:tothem/theme/tothem_theme.dart';
-import 'bloc/welcome_blocs.dart';
-import 'bloc/welcome_states.dart';
+import 'package:tothem/screens/screens.dart';
 
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
@@ -27,23 +23,40 @@ class _SignupState extends State<Signup> {
             child: Scaffold(
                 backgroundColor: TothemTheme.lightGreen,
                 body: SingleChildScrollView(
-                    child: buildSigninComponents(context, (value) {
+                    child: buildSignupComponents(context, (value) {
                   context.read<WelcomeBloc>().add(MailEvent(value));
                 }, (value) {
                   context.read<WelcomeBloc>().add(PwdEvent(value));
+                }, (value) {
+                  context.read<WelcomeBloc>().add(RePwdEvent(value));
+                }, () {
+                  WelcomeController(context: context).handleSignUp("mail");
+                }, () {
+                  WelcomeController(context: context).handleSignUp("google");
                 }))));
       }),
     );
   }
 }
 
-Widget buildSigninComponents(
+Widget buildSignupComponents(
     BuildContext context,
     void Function(String value)? mailFunction,
-    void Function(String value)? pwdFunction) {
+    void Function(String value)? pwdFunction,
+    void Function(String value)? rePwdFunction,
+    void Function() handleSignUp,
+    void Function() handleGoogleSignUp) {
   return Column(children: [
     buildUpperBox(context, 0.30, '9.png'),
     buildLowerBox(
-        context, Colors.white, false, 'Regístrate', mailFunction, pwdFunction)
+        context: context,
+        color: Colors.white,
+        wrongCredentials: false,
+        title: 'Regístrate',
+        mailFunction: mailFunction,
+        pwdFunction: pwdFunction,
+        rePwdFunction: rePwdFunction,
+        buttonFunction: handleSignUp,
+        googleButtonFunction: handleGoogleSignUp)
   ]);
 }

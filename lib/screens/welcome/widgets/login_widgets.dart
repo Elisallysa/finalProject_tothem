@@ -12,12 +12,15 @@ SizedBox buildUpperBox(
 }
 
 Container buildLowerBox(
-    BuildContext context,
-    Color color,
-    bool wrongCredentials,
-    String title,
-    void Function(String value)? mailFunction,
-    void Function(String value)? pwdFunction) {
+    {required BuildContext context,
+    required Color color,
+    required bool wrongCredentials,
+    required String title,
+    required void Function(String value)? mailFunction,
+    required void Function(String value)? pwdFunction,
+    void Function(String value)? rePwdFunction,
+    required void Function() buttonFunction,
+    required void Function() googleButtonFunction}) {
   return Container(
     decoration: BoxDecoration(
         color: color,
@@ -32,7 +35,8 @@ Container buildLowerBox(
               wrongCredentials: wrongCredentials,
               title: title,
               mailFunction: mailFunction,
-              pwdFunction: pwdFunction),
+              pwdFunction: pwdFunction,
+              rePwdFunction: rePwdFunction),
           ElevatedButton(
               style: OutlinedButton.styleFrom(
                 backgroundColor: TothemTheme.accentPink,
@@ -42,7 +46,7 @@ Container buildLowerBox(
                 shadowColor: const Color.fromARGB(255, 128, 36, 105),
                 fixedSize: const Size(double.maxFinite, 50),
               ),
-              onPressed: () {},
+              onPressed: buttonFunction,
               child: Text(title, style: TothemTheme.buttonTextW)),
           SizedBox(
             height: 20.h,
@@ -78,7 +82,7 @@ Container buildLowerBox(
                 shadowColor: const Color.fromARGB(255, 128, 36, 105),
                 fixedSize: const Size(double.maxFinite, 50),
               ),
-              onPressed: () {},
+              onPressed: googleButtonFunction,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -110,7 +114,8 @@ Form _reusableForm(
     {required String title,
     required bool wrongCredentials,
     void Function(String value)? mailFunction,
-    required void Function(String value)? pwdFunction}) {
+    required void Function(String value)? pwdFunction,
+    void Function(String value)? rePwdFunction}) {
   return Form(
     child: Column(
       children: [
@@ -139,10 +144,10 @@ Form _reusableForm(
           visible: title == 'Regístrate',
           child: Column(children: [
             _reusableTextField(
-                labelText: 'Repite la contraseña',
+                labelText: 'Confirmar contraseña',
                 hintText: 'Repite tu contraseña',
                 icon: const Icon(Tothem.lock),
-                function: (value) => pwdFunction!(value)),
+                function: (value) => rePwdFunction!(value)),
             SizedBox(
               height: 20.h,
             )
@@ -172,7 +177,7 @@ TextField _reusableTextField(
     required void Function(String value) function}) {
   return TextField(
     onChanged: (value) => function(value),
-    obscureText: labelText == 'Contraseña' ? true : false,
+    obscureText: labelText.contains('ontraseña') ? true : false,
     keyboardType: labelText == 'Email'
         ? TextInputType.emailAddress
         : TextInputType.multiline,

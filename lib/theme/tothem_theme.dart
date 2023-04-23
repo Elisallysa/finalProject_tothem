@@ -1,9 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+/// Theme, colors and fonts used in tothem App.
 class TothemTheme {
-  // Text fonts and styles and colors.
   TothemTheme._();
+
+  // Theme
+  static ThemeData getTothemTheme() {
+    return ThemeData(
+        colorScheme: const ColorScheme(
+            brightness: Brightness.light,
+            primary: kellyGreen,
+            onPrimary: Colors.white,
+            secondary: brinkPink,
+            onSecondary: Colors.white,
+            error: Colors.red,
+            onError: Colors.white,
+            background: Colors.white,
+            onBackground: Colors.black,
+            surface: Colors.white,
+            onSurface: Colors.black));
+  }
 
   // MAIN COLOR VARIATIONS: LIME
   static const Color tothemLime = Color.fromRGBO(16, 211, 39, 1);

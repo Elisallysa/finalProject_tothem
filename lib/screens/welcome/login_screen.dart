@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tothem/screens/welcome/welcome_controller.dart';
 import 'package:tothem/screens/welcome/widgets/login_widgets.dart';
 import 'package:tothem/theme/tothem_theme.dart';
 import 'bloc/welcome_blocs.dart';
@@ -26,6 +27,10 @@ class _LoginState extends State<Login> {
                   context.read<WelcomeBloc>().add(MailEvent(value));
                 }, (value) {
                   context.read<WelcomeBloc>().add(PwdEvent(value));
+                }, () {
+                  WelcomeController(context: context).handleSignIn("mail");
+                }, () {
+                  WelcomeController(context: context).handleSignIn("google");
                 }))));
       }),
     );
@@ -35,10 +40,19 @@ class _LoginState extends State<Login> {
 Widget buildLoginComponents(
     BuildContext context,
     void Function(String value) mailFunction,
-    void Function(String value) pwdFunction) {
+    void Function(String value) pwdFunction,
+    void Function() handleLogIn,
+    void Function() handleGoogleLogIn) {
   return Column(children: [
     buildUpperBox(context, 0.30, '7.png'),
-    buildLowerBox(context, Colors.white, false, 'Iniciar sesión', mailFunction,
-        pwdFunction)
+    buildLowerBox(
+        context: context,
+        color: Colors.white,
+        wrongCredentials: false,
+        title: 'Iniciar sesión',
+        mailFunction: mailFunction,
+        pwdFunction: pwdFunction,
+        buttonFunction: handleLogIn,
+        googleButtonFunction: handleGoogleLogIn)
   ]);
 }
