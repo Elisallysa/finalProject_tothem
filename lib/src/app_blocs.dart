@@ -1,5 +1,5 @@
-import 'package:tothem/app_events.dart';
-import 'package:tothem/app_states.dart';
+import 'package:tothem/src/app_events.dart';
+import 'package:tothem/src/app_states.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 

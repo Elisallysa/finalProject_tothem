@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tothem/screens/welcome/welcome_controller.dart';
-import 'package:tothem/screens/welcome/widgets/login_widgets.dart';
-import 'package:tothem/theme/tothem_theme.dart';
-import 'bloc/welcome_blocs.dart';
-import 'bloc/welcome_events.dart';
-import 'bloc/welcome_states.dart';
+import 'package:tothem/src/screens/screens.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});

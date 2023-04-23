@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tothem/screens/screens.dart';
+import 'package:tothem/src/screens/screens.dart';
 
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);

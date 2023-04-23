@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:tothem/screens/welcome/bloc/welcome_blocs.dart';
-import 'package:tothem/widgets/flutter_toast.dart';
+import 'package:tothem/src/screens/welcome/bloc/welcome_blocs.dart';
+import 'package:tothem/src/common/widgets/flutter_toast.dart';
 
 class WelcomeController {
   final BuildContext context;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'src/app.dart';
-import 'src/settings/settings_controller.dart';
-import 'src/settings/settings_service.dart';
+import 'app.dart';
+import 'settings/settings_controller.dart';
+import 'settings/settings_service.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+import '/firebase_options.dart';
 
 void main() async {
   await Firebase.initializeApp(

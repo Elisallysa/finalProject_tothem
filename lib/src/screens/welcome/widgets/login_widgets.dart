@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../theme/tothem_theme.dart';
-import '../../../tothem_icons.dart';
+import '../../../common/theme/tothem_theme.dart';
+import '../../../common/assets/tothem_icons.dart';
 
 SizedBox buildUpperBox(
     BuildContext context, double screenArea, String imageName) {
