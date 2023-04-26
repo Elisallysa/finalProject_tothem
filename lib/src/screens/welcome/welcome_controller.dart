@@ -41,9 +41,9 @@ class WelcomeController {
 
           var user = credentials.user;
           if (user != null) {
-            // We get a verified user from Firebase
+            navigateToScreen('/home');
           } else {
-            // We get an error when verifying user
+            print('NO VERIFI -----');
           }
         } on FirebaseAuthException catch (e) {
           if (e.code == 'user-not-found') {
@@ -85,8 +85,8 @@ class WelcomeController {
                       "Ha habido algún error en el registro. Pruebe otra vez.");
             }
             if (!credentials.user!.emailVerified) {
-              toastInfo(msg: "¡Bienvenido! Recuerda verificar tu Email.");
-              // TO DO: OPEN HOME
+              toastInfo(msg: "¡Bienvenido! Ahora puedes iniciar sesión.");
+              navigateToScreen('/login');
             }
 
             var user = credentials.user;
@@ -118,17 +118,29 @@ class WelcomeController {
 
   /// Handles registering user with Google account.
   Future<void> _handleGoogleSignIn() async {
-    // Begin interactive log in process
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    try {
+      // Begin interactive log in process
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    // Obtain authentication details from request
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser!.authentication;
+      // Obtain authentication details from request
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser!.authentication;
 
-    // Create credentials for the user
-    final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+      // Create credentials for the user
+      final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
 
-    FirebaseAuth.instance.signInWithCredential(credential);
+      FirebaseAuth.instance.signInWithCredential(credential);
+
+      navigateToScreen('/home');
+    } on FirebaseAuthException catch (e) {
+      toastInfo(msg: 'Ha habido un error en la autenticación.');
+    } catch (e) {
+      toastInfo(msg: 'No ha sido posible la autenticación.');
+    }
+  }
+
+  void navigateToScreen(String route) {
+    Navigator.pushReplacementNamed(context, route);
   }
 }

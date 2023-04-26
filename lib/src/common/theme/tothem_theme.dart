@@ -19,7 +19,8 @@ class TothemTheme {
             background: Colors.white,
             onBackground: Colors.black,
             surface: Colors.white,
-            onSurface: Colors.black));
+            onSurface: Colors.black),
+        fontFamily: openSansFont);
   }
 
   // MAIN COLOR VARIATIONS: LIME
@@ -44,6 +45,8 @@ class TothemTheme {
   static const Color lightGreen = Color.fromRGBO(243, 255, 235, 1);
 
   // TEXT FONTS AND STYLES
+
+  static String? openSansFont = GoogleFonts.openSans().fontFamily;
 
   static TextStyle title = GoogleFonts.openSans(
       color: Colors.black, fontSize: 24, fontWeight: FontWeight.w700);

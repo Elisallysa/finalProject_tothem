@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tothem/src/screens/screens.dart';
 
 import '../../../common/theme/tothem_theme.dart';
 import '../../../common/assets/tothem_icons.dart';
@@ -97,13 +98,15 @@ Container buildLowerBox(
           SizedBox(
             height: 20.h,
           ),
-          _reusableClickableText(
-              alignment: Alignment.topCenter,
-              text: title.contains('Iniciar')
-                  ? '¿Nuevo usuario? Regístrate'
-                  : 'Volver al inicio de sesión',
-              height: 30.h,
-              context: context),
+          Center(
+            child: _reusableClickableText(
+                alignment: Alignment.topCenter,
+                text: title.contains('Iniciar')
+                    ? '¿Nuevo usuario? Regístrate'
+                    : 'Volver al inicio de sesión',
+                height: 30.h,
+                context: context),
+          ),
         ],
       ),
     ),
@@ -200,13 +203,15 @@ Container _reusableClickableText(
     child: TextButton(
         child: Text(text, style: TothemTheme.clickableText),
         onPressed: () {
+          String route;
           if (text.contains('olvidado')) {
-            Navigator.pushReplacementNamed(context, '/forgotPwd');
+            route = '/forgotpwd';
           } else if (text.contains('inicio')) {
-            Navigator.pushReplacementNamed(context, '/login');
+            route = '/login';
           } else {
-            Navigator.pushReplacementNamed(context, '/signin');
+            route = '/signup';
           }
+          WelcomeController(context: context).navigateToScreen(route);
         }),
   );
 }
