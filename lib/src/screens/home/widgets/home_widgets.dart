@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:tothem/src/common/assets/tothem_icons.dart';
-import 'package:tothem/src/screens/my_courses/my_courses.dart';
+import 'package:tothem/src/screens/home/my_courses.dart';
 
 SliverAppBar customSliverAppBar() {
   /// Transparent AppBar in Home view.
