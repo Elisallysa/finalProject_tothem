@@ -8,73 +8,83 @@ class MyCoursesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        extendBodyBehindAppBar: false,
-        appBar: MyCustomAppBar(
-            height: kToolbarHeight * 4,
-            appBar: AppBar(
-              backgroundColor: TothemTheme.rybGreen,
-              elevation: 0,
-              leading: const Icon(Tothem.menu),
-            ),
-            color: Colors.transparent,
-            bottomWidget: Container(
-              //margin: EdgeInsets.all(20),
-              width: double.infinity,
-              height: 125.h,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: const DecorationImage(
-                  image: NetworkImage(
-                      'https://patientcaremedical.com/wp-content/uploads/2018/04/male-catheters.jpg'),
+    return Scaffold(
+      bottomNavigationBar: const TothemBottomAppBar(),
+      backgroundColor: TothemTheme.rybGreen,
+      body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints viewportConstraints) {
+          return CustomScrollView(
+            slivers: <Widget>[
+              customSliverAppBar(),
+              SliverList(
+                delegate: SliverChildListDelegate(
+                  [
+                    profilePictureHeader(),
+                    BodyWidget(Colors.red),
+                    BodyWidget(Colors.green),
+                    BodyWidget(Colors.orange),
+                    BodyWidget(Colors.transparent),
+                    BodyWidget(Colors.red),
+                  ],
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 3,
-                    blurRadius: 5,
-                    offset: const Offset(0, 3), // changes position of shadow
-                  ),
-                ],
               ),
-            )),
-        body: SingleChildScrollView(
-            child: Column(
-          children: [
-            Container(
-              child: Text('home'),
-              height: 90,
-              color: Colors.yellow,
-            ),
-            Container(
-              child: Text('home'),
-              height: 90,
-              color: Colors.black,
-            ),
-            Container(
-              child: Text('home'),
-              height: 90,
-              color: Colors.blue,
-            ),
-            Container(
-              child: Text('home'),
-              height: 90,
-              color: Colors.orange,
-            ),
-            Container(
-              child: Text('home'),
-              height: 90,
-              color: Colors.pink,
-            ),
-            Container(
-              child: Text('home'),
-              height: 90,
-              color: Colors.purple,
-            ),
-          ],
-        )),
+              SliverGrid(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2),
+                delegate: SliverChildListDelegate(
+                  [
+                    Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(50),
+                              topRight: Radius.circular(50))),
+                    ),
+                    BodyWidget(Colors.transparent),
+                    BodyWidget(Colors.yellow),
+                    BodyWidget(Colors.orange),
+                    BodyWidget(Colors.blue),
+                    BodyWidget(Colors.red),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
+  }
+}
+
+class HeaderWidget extends StatelessWidget {
+  final String text;
+
+  HeaderWidget(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(16.0),
+      child: Text('jadfas'),
+      color: Colors.grey[200],
+    );
+  }
+}
+
+class BodyWidget extends StatelessWidget {
+  final Color color;
+
+  BodyWidget(this.color);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        height: 80.0,
+        color: color,
+        alignment: Alignment.center,
+        child: Card(
+          color: Colors.white,
+          child: Text('Terjadif'),
+        ));
   }
 }

@@ -33,12 +33,12 @@ class TothemApp extends StatelessWidget {
         builder: (context, child) => MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'tothem',
-            initialRoute: '/login',
+            initialRoute: '/home',
             //home: const Login(),
             routes: {
               '/login': (_) => const Login(),
               '/signup': (_) => const Signup(),
-              '/home': (_) => const HomeScreen(),
+              '/home': (_) => const MyCoursesScreen(),
             },
             theme: TothemTheme.getTothemTheme()),
       ),
