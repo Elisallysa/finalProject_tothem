@@ -5,7 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 class TothemTheme {
   TothemTheme._();
 
-  // Theme
+  // ThemeData
+  //Not used
   static ThemeData getTothemTheme() {
     return ThemeData(
         colorScheme: const ColorScheme(
@@ -23,6 +24,39 @@ class TothemTheme {
         fontFamily: openSansFont);
   }
 
+  static ThemeData getSeedTheme() {
+    return ThemeData(
+        brightness: Brightness.light,
+        colorSchemeSeed: rybGreen,
+        iconButtonTheme: const IconButtonThemeData(
+            style: ButtonStyle(
+                iconColor: MaterialStatePropertyAll(rybGreen),
+                surfaceTintColor: MaterialStatePropertyAll(brinkPink))),
+        iconTheme: const IconThemeData(color: TothemTheme.rybGreen),
+        buttonTheme: ButtonThemeData(buttonColor: brinkPink),
+        primaryIconTheme: const IconThemeData(color: Colors.yellow),
+        appBarTheme:
+            const AppBarTheme(iconTheme: IconThemeData(color: Colors.white)),
+        useMaterial3: true,
+        fontFamily: openSansFont);
+  }
+
+// Not used
+  static ColorScheme tothemColors() {
+    return const ColorScheme.light(
+        brightness: Brightness.light,
+        primary: kellyGreen,
+        onPrimary: Colors.white,
+        secondary: brinkPink,
+        onSecondary: Colors.white,
+        error: Colors.red,
+        onError: Colors.white,
+        background: Colors.white,
+        onBackground: Colors.black,
+        surface: Colors.white,
+        onSurface: Colors.black);
+  }
+
   // MAIN COLOR VARIATIONS: LIME
   static const Color tothemLime = Color.fromRGBO(16, 211, 39, 1);
   static const Color shadowLime = Color.fromRGBO(104, 145, 8, 1);
@@ -31,7 +65,7 @@ class TothemTheme {
   // ACCENT COLOR VARIATIONS: PINK
   static const Color accentPink = Color.fromRGBO(255, 74, 118, 1);
 
-  // TEXT COLORS
+  // AUX COLORS
   static const Color silver = Color.fromRGBO(155, 161, 171, 1);
   static const Color lightGrey = Color.fromRGBO(241, 246, 247, 1);
 
@@ -50,12 +84,19 @@ class TothemTheme {
 
   static TextStyle title = GoogleFonts.openSans(
       color: Colors.black, fontSize: 24, fontWeight: FontWeight.w700);
+  static TextStyle smallTitle = GoogleFonts.openSans(
+      color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600);
+  static TextStyle whiteTitle = GoogleFonts.openSans(
+      color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600);
+  static TextStyle whiteSubitle = GoogleFonts.openSans(
+      color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400);
   static TextStyle bodyText = GoogleFonts.openSans(
       color: Colors.black, fontSize: 18, fontWeight: FontWeight.normal);
   static TextStyle screenTitle = GoogleFonts.openSans(
       color: Colors.black, fontSize: 24, fontWeight: FontWeight.w500);
   static TextStyle silverText = GoogleFonts.openSans(
       color: silver, fontSize: 14, fontWeight: FontWeight.normal);
+
   static TextStyle clickableText = GoogleFonts.openSans(
       color: darkerLime, fontSize: 14, fontWeight: FontWeight.w500);
   static TextStyle buttonTextW = GoogleFonts.openSans(

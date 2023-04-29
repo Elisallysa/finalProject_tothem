@@ -7,6 +7,7 @@ import 'package:tothem/src/screens/home/my_courses.dart';
 SliverAppBar customSliverAppBar() {
   /// Transparent AppBar in Home view.
   return SliverAppBar(
+    elevation: 0,
     backgroundColor: Colors.transparent,
     leading: const Icon(Tothem.chevronLeft),
     expandedHeight: 80.h,
@@ -33,9 +34,10 @@ Stack profilePictureHeader() {
     Container(
       alignment: Alignment.bottomCenter,
       height: 50.h,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.only(
+          border: Border.all(width: 0, color: Colors.white),
+          borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(50), topRight: Radius.circular(50))),
     ),
     Align(
@@ -55,22 +57,13 @@ Stack profilePictureHeader() {
   ]);
 }
 
-class Student extends StatelessWidget {
-  final Color color;
-
-  Student(this.color);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        height: 80.0,
-        color: color,
-        alignment: Alignment.center,
-        child: Card(
-          color: Colors.white,
-          child: Text('Terjadif'),
-        ));
-  }
+Container whiteBackgroundContainer(Widget child) {
+  return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(width: 0, color: Colors.white),
+      ),
+      child: child);
 }
 
 // ------- WIDGETS I'M NOT CURRENTLY USING -----

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:tothem/src/screens/home/bloc/home_blocs.dart';
 import 'package:tothem/src/screens/home/home_screen.dart';
 import 'package:tothem/src/screens/home/my_courses_screen.dart';
 import '/firebase_options.dart';
@@ -27,6 +28,7 @@ class TothemApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => WelcomeBloc()),
+        BlocProvider(create: (context) => HomeBloc()),
         ChangeNotifierProvider(create: (context) => AuthService())
       ],
       child: ScreenUtilInit(
@@ -40,7 +42,7 @@ class TothemApp extends StatelessWidget {
               '/signup': (_) => const Signup(),
               '/home': (_) => const MyCoursesScreen(),
             },
-            theme: TothemTheme.getTothemTheme()),
+            theme: TothemTheme.getSeedTheme()),
       ),
     );
   }

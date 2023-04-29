@@ -1,57 +1,104 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tothem/src/common/assets/tothem_icons.dart';
 import 'package:tothem/src/screens/home/my_courses.dart';
 
 class MyCoursesScreen extends StatelessWidget {
-  const MyCoursesScreen({Key? key}) : super(key: key);
+  final String? userName;
+  final String? userLastName;
+  final String? userRole;
+
+  const MyCoursesScreen(
+      {Key? key, this.userName, this.userLastName, this.userRole})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: const TothemBottomAppBar(),
       backgroundColor: TothemTheme.rybGreen,
-      body: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints viewportConstraints) {
-          return CustomScrollView(
-            slivers: <Widget>[
-              customSliverAppBar(),
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    profilePictureHeader(),
-                    BodyWidget(Colors.red),
-                    BodyWidget(Colors.green),
-                    BodyWidget(Colors.orange),
-                    BodyWidget(Colors.transparent),
-                    BodyWidget(Colors.red),
-                  ],
+      body: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
+        return LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints viewportConstraints) {
+            return CustomScrollView(
+              slivers: <Widget>[
+                customSliverAppBar(),
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      Column(
+                        children: [
+                          profilePictureHeader(),
+                          UserInfoContainer(
+                              userName: userName,
+                              userLastName: userLastName,
+                              userRole: userRole),
+                          whiteBackgroundContainer(
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 10, left: 10, right: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Mis cursos',
+                                    style: TothemTheme.title,
+                                  ),
+                                  ButtonBar(
+                                    children: [
+                                      getGreenIconButton(context, () {},
+                                          Icons.search, TothemTheme.rybGreen),
+                                      getGreenIconButton(context, () {},
+                                          Icons.add, TothemTheme.rybGreen)
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SliverGrid(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2),
-                delegate: SliverChildListDelegate(
-                  [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(50),
-                              topRight: Radius.circular(50))),
-                    ),
-                    BodyWidget(Colors.transparent),
-                    BodyWidget(Colors.yellow),
-                    BodyWidget(Colors.orange),
-                    BodyWidget(Colors.blue),
-                    BodyWidget(Colors.red),
-                  ],
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                      (context, index) => whiteBackgroundContainer(
+                            CourseCard(
+                              key: key,
+                            ),
+                          ),
+                      childCount: 2),
+                )
+                /*
+                SliverGrid(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2),
+                  delegate: SliverChildListDelegate(
+                    [
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(50),
+                                topRight: Radius.circular(50))),
+                      ),
+                      BodyWidget(Colors.transparent),
+                      BodyWidget(Colors.yellow),
+                      BodyWidget(Colors.orange),
+                      BodyWidget(Colors.blue),
+                      BodyWidget(Colors.red),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          );
-        },
-      ),
+                */
+              ],
+            );
+          },
+        );
+      }),
     );
   }
 }
