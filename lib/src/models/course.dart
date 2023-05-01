@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 import 'package:tothem/src/models/user.dart';
 
-class Course {
+class Course extends Equatable {
   final String? id;
   final String title;
   final String areaOfKnowledge;
@@ -15,7 +17,7 @@ class Course {
       this.areaOfKnowledge = '',
       this.trainingHours = 0,
       this.teacherId = '',
-      this.students = const []});
+      this.students = const <User>[]});
 
   Course copyWith({
     String? id,
@@ -48,6 +50,15 @@ class Course {
         "areaOfKnowledge": areaOfKnowledge,
         "studentList": List<dynamic>.from(students.map((x) => x.toJson())),
       };
+
+  @override
+  List<Object?> get props => [title, areaOfKnowledge];
+
+  static Course fromSnapshot(DocumentSnapshot snap) {
+    Course course =
+        Course(title: snap['title'], areaOfKnowledge: snap['areaOfKnowledge']);
+    return course;
+  }
 }
 
 // Método de serialización de string de json a lista de cursos

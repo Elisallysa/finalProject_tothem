@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:tothem/src/repository/bloc/category/category_bloc.dart';
+import 'package:tothem/src/repository/category_repository/category_repository.dart';
 import 'package:tothem/src/screens/home/bloc/home_blocs.dart';
 import 'package:tothem/src/screens/home/home_screen.dart';
-import 'package:tothem/src/screens/home/my_courses_screen.dart';
-import '/firebase_options.dart';
+import 'package:tothem/src/screens/home/home_screen.dart';
+import 'firebase_options.dart';
 
 import 'package:tothem/src/screens/screens.dart';
 
@@ -27,8 +29,11 @@ class TothemApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => WelcomeBloc()),
-        BlocProvider(create: (context) => HomeBloc()),
+        BlocProvider(create: (_) => WelcomeBloc()),
+        BlocProvider(create: (_) => HomeBloc()),
+        BlocProvider(
+            create: (_) =>
+                CategoryBloc(categoryRepository: CategoryRepository())),
         ChangeNotifierProvider(create: (context) => AuthService())
       ],
       child: ScreenUtilInit(
@@ -40,7 +45,7 @@ class TothemApp extends StatelessWidget {
             routes: {
               '/login': (_) => const Login(),
               '/signup': (_) => const Signup(),
-              '/home': (_) => const MyCoursesScreen(),
+              '/home': (_) => const HomeScreen(),
             },
             theme: TothemTheme.getSeedTheme()),
       ),

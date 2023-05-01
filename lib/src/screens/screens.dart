@@ -3,7 +3,7 @@ export 'package:tothem/src/screens/welcome/signup_screen.dart';
 export 'package:tothem/src/screens/welcome/bloc/welcome_blocs.dart';
 export 'package:tothem/src/screens/welcome/bloc/welcome_events.dart';
 export 'package:tothem/src/screens/welcome/bloc/welcome_states.dart';
-export 'package:tothem/src/screens/welcome/widgets/login_widgets.dart';
+export 'package:tothem/src/screens/welcome/widgets/welcome_widgets.dart';
 export 'package:tothem/src/screens/welcome/login_screen.dart';
 export 'package:tothem/src/services/auth_service.dart';
 export 'package:tothem/src/common/theme/tothem_theme.dart';

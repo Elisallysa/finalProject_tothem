@@ -1,8 +1,9 @@
 import 'dart:convert';
-
+import 'package:equatable/equatable.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'course.dart';
 
-class User {
+class User extends Equatable {
   final String? id;
   final String name;
   final String lastname;
@@ -24,7 +25,7 @@ class User {
       this.country = '',
       this.email = '',
       this.role = '',
-      this.courses = const []});
+      this.courses = const <Course>[]});
 
   User copyWith({
     String? id,
@@ -65,12 +66,20 @@ class User {
         "lastname": lastname,
         "courses": List<dynamic>.from(courses.map((x) => x.toJson())),
       };
+
+  @override
+  List<Object?> get props => [name, lastname];
+
+  static User fromSnapshot(DocumentSnapshot snap) {
+    User user = User(name: snap['name'], lastname: snap['lasname']);
+    return user;
+  }
 }
 
-// Método de serialización de string de json a lista de Usuario
+/// Serializes a Json String to a List of User objects.
 List<User> usuarioFromJson(String str) =>
     List<User>.from(json.decode(str).map((x) => User.fromJson(x)));
 
-// Método de serialización de lista de Usuario a cadena de caracteres
+/// Serializes a List of User objects into a Json String.
 String usuarioToJson(List<User> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));

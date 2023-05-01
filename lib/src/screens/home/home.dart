@@ -1,9 +1,8 @@
 export 'package:tothem/src/screens/home/bloc/home_blocs.dart';
 export 'package:tothem/src/screens/home/bloc/home_events.dart';
 export 'package:tothem/src/screens/home/bloc/home_states.dart';
-export 'package:tothem/src/screens/home/widgets/custom_appbar.dart';
 export 'package:tothem/src/common/theme/tothem_theme.dart';
-export 'package:tothem/src/screens/home/my_courses.dart';
+export 'package:tothem/src/screens/home/home.dart';
 export 'package:tothem/src/screens/home/widgets/home_widgets.dart';
 export 'package:tothem/src/common/widgets/tothem_bottom_app_bar.dart';
 export 'package:tothem/src/screens/home/widgets/user_info.dart';
