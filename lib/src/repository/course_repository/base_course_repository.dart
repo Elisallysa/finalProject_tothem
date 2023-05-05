@@ -1,5 +1,5 @@
 import '../../models/course.dart';
 
 abstract class BaseCourseRepository {
-  Stream<List<Course>> getAllCategories();
+  Stream<List<Course>> getAllCourses();
 }

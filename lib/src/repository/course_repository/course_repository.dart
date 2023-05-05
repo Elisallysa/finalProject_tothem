@@ -10,7 +10,7 @@ class CourseRepository extends BaseCourseRepository {
       : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
 
   @override
-  Stream<List<Course>> getAllCategories() {
+  Stream<List<Course>> getAllCourses() {
     return _firebaseFirestore.collection('courses').snapshots().map((snapshot) {
       return snapshot.docs.map((doc) => Course.fromSnapshot(doc)).toList();
     });

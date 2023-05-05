@@ -12,29 +12,23 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
 
   CategoryBloc({required CategoryRepository categoryRepository})
       : _categoryRepository = categoryRepository,
-        super(CategoryLoading());
-
-  @override
-  Stream<CategoryState> mapEventToState(
-    CategoryEvent event,
-  ) async* {
-    if (event is LoadCategories) {
-      yield* _mapLoadCategoriesToState();
-    }
-    if (event is UpdateCategories) {
-      yield* _mapUpdateCategoriesToState(event);
-    }
+        super(CategoryLoading()) {
+    on<LoadCategories>((event, emit) async {
+      await _mapLoadCategoriesToState(emit);
+    });
+    on<UpdateCategories>(
+        (event, emit) => _mapUpdateCategoriesToState(event, emit));
   }
 
-  Stream<CategoryState> _mapLoadCategoriesToState() async* {
+  Future<void> _mapLoadCategoriesToState(Emitter<CategoryState> emit) async {
     _categorySubscription?.cancel();
     _categorySubscription = _categoryRepository
         .getAllCategories()
         .listen((categories) => add(UpdateCategories(categories)));
   }
 
-  Stream<CategoryState> _mapUpdateCategoriesToState(
-      UpdateCategories event) async* {
-    yield CategoryLoaded(categories: event.categories);
+  Future<void> _mapUpdateCategoriesToState(
+      UpdateCategories event, Emitter<CategoryState> emit) async {
+    emit(CategoryLoaded(categories: event.categories));
   }
 }
