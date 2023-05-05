@@ -71,7 +71,12 @@ class User extends Equatable {
   List<Object?> get props => [name, lastname];
 
   static User fromSnapshot(DocumentSnapshot snap) {
-    User user = User(name: snap['name'], lastname: snap['lasname']);
+    User user = User(
+        name: snap['name'],
+        lastname: snap['lastname'],
+        email: snap['email'],
+        role: snap['role'],
+        address: snap['telephone']);
     return user;
   }
 }

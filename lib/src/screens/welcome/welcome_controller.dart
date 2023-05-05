@@ -2,12 +2,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:tothem/src/screens/welcome/bloc/welcome_blocs.dart';
-import 'package:tothem/src/common/widgets/flutter_toast.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:tothem/src/screens/screens.dart';
 
 class WelcomeController {
   final BuildContext context;
-  const WelcomeController({required this.context});
+  final FirebaseFirestore _firebaseFirestore;
+
+  WelcomeController(
+      {required this.context, FirebaseFirestore? firebaseFirestore})
+      : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
 
   Future<void> handleSignIn(String type) async {
     try {
@@ -78,23 +83,35 @@ class WelcomeController {
           try {
             final credentials = await FirebaseAuth.instance
                 .createUserWithEmailAndPassword(
-                    email: emailAddress, password: pwd);
-            if (credentials.user == null) {
-              toastInfo(
-                  msg:
-                      "Ha habido algún error en el registro. Pruebe otra vez.");
-            }
-            if (!credentials.user!.emailVerified) {
-              toastInfo(msg: "¡Bienvenido! Ahora puedes iniciar sesión.");
-              navigateToScreen('/login');
-            }
+                    email: emailAddress, password: pwd)
+                .then((credentials) {
+              if (credentials.user != null) {
+                print('-----Storing user in DB------');
+                _firebaseFirestore
+                    .collection('users')
+                    .doc(credentials.user!.uid)
+                    .set({
+                  'name': credentials.user!.displayName,
+                  'email': credentials.user!.email
+                });
+              } else {
+                // We get an error when verifying user
+                print('----Something went wrong in the sign up ------');
+              }
+
+              if (credentials.user == null) {
+                toastInfo(
+                    msg:
+                        "Ha habido algún error en el registro. Pruebe otra vez.");
+              }
+              if (!credentials.user!.emailVerified) {
+                toastInfo(msg: "¡Bienvenido! Ahora puedes iniciar sesión.");
+
+                navigateToScreen('/login');
+              }
+            });
 
             var user = credentials.user;
-            if (user != null) {
-              // We get a verified user from Firebase
-            } else {
-              // We get an error when verifying user
-            }
           } on FirebaseAuthException catch (e) {
             if (e.code == 'email-already-in-use') {
               toastInfo(msg: "Esta cuenta ya está registrada.");
@@ -132,6 +149,8 @@ class WelcomeController {
 
       FirebaseAuth.instance.signInWithCredential(credential);
 
+      // await saveUser(googleUser);
+
       navigateToScreen('/home');
     } on FirebaseAuthException catch (e) {
       toastInfo(msg: 'Ha habido un error en la autenticación.');
@@ -143,4 +162,10 @@ class WelcomeController {
   void navigateToScreen(String route) {
     Navigator.pushReplacementNamed(context, route);
   }
+
+/*
+  saveUser(GoogleSignInAccount googleUser) async {
+    userFR.doc(googleUser.email.substring(0, googleUser.email.indexOf('@')));
+  }
+*/
 }

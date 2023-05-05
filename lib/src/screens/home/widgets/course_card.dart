@@ -3,13 +3,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tothem/src/common/theme/tothem_theme.dart';
 
 class CourseCard extends StatelessWidget {
-  final String heading = 'Título del Curso';
-  final String subheading = 'Área de conocimiento';
-  final String teacherName = 'Formador Apellido';
-  final String? imagePath = 'https://source.unsplash.com/random/800x600?house';
-  final String courseDescription = 'This is the course description...';
+  final String heading;
+  final String subheading;
+  final String teacherName;
+  final String imagePath;
+  final String courseDescription;
 
-  const CourseCard({Key? key}) : super(key: key);
+  const CourseCard(
+      {super.key,
+      this.heading = 'Título del curso',
+      this.subheading = 'Área de conocimiento',
+      this.teacherName = 'John Doe',
+      this.imagePath = '',
+      this.courseDescription = 'Descripción del curso.'});
 
   @override
   Widget build(BuildContext context) {

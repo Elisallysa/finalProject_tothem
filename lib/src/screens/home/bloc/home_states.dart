@@ -1,22 +1,30 @@
+import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:get/get.dart';
+
+import '../../../models/user.dart';
+
+enum AuthStatus { unknown, authenticated, unauthenticated }
+
 /// [HomeState] transmits the events to BLoC in order to perform the corresponding logic.
-class HomeState {
-  final String userName;
-  final String userLastname;
-  final String userRole;
+class HomeState extends Equatable {
+  final AuthStatus status;
+  final auth.User? authUser;
+  final User? user;
 
-  /// [HomeState] unnamed constructor. [userName], [userLastname] and [userRole]
-  /// are optional named parameters. This way the constructor can be called without
-  /// explicitly setting the parameters' values.
-  const HomeState(
-      {this.userName = "", this.userLastname = "", this.userRole = ""});
+  const HomeState._(
+      {this.status = AuthStatus.unknown, this.authUser, this.user});
 
-  /// Allows the creation of an user object with or without the attributes declared
-  /// in [HomeState]. This copies the parameters of a previous object if any.
-  HomeState copyWith(
-      {String? userName, String? userLastname, String? userRole}) {
-    return HomeState(
-        userName: userName ?? this.userName,
-        userLastname: userLastname ?? this.userLastname,
-        userRole: userRole ?? this.userRole);
-  }
+  const HomeState.unknown() : this._();
+
+  const HomeState.authenticated({
+    required auth.User authUser,
+    required User user,
+  }) : this._(status: AuthStatus.authenticated, authUser: authUser, user: user);
+
+  const HomeState.unauthenticated()
+      : this._(status: AuthStatus.unauthenticated);
+
+  @override
+  List<Object?> get props => [status, authUser, user];
 }

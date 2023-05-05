@@ -6,7 +6,7 @@ import 'package:tothem/src/models/user.dart';
 class Course extends Equatable {
   final String? id;
   final String title;
-  final String areaOfKnowledge;
+  final String category;
   final int trainingHours;
   final String teacherId;
   final List<User> students;
@@ -14,7 +14,7 @@ class Course extends Equatable {
   const Course(
       {this.id,
       this.title = '',
-      this.areaOfKnowledge = '',
+      this.category = '',
       this.trainingHours = 0,
       this.teacherId = '',
       this.students = const <User>[]});
@@ -22,7 +22,7 @@ class Course extends Equatable {
   Course copyWith({
     String? id,
     String? title,
-    String? areaOfKnowledge,
+    String? category,
     int? trainingHours,
     String? teacherId,
     List<User>? students,
@@ -30,7 +30,7 @@ class Course extends Equatable {
     return Course(
         id: id ?? this.id,
         title: title ?? this.title,
-        areaOfKnowledge: areaOfKnowledge ?? this.areaOfKnowledge,
+        category: category ?? this.category,
         trainingHours: trainingHours ?? this.trainingHours,
         teacherId: teacherId ?? this.teacherId,
         students: students ?? this.students);
@@ -39,7 +39,7 @@ class Course extends Equatable {
   factory Course.fromJson(Map<String, dynamic> json) => Course(
         id: json["course_id"],
         title: json["title"],
-        areaOfKnowledge: json["areaOfKnowledge"],
+        category: json["category"],
         students:
             List<User>.from(json["studentList"].map((x) => Course.fromJson(x))),
       );
@@ -47,16 +47,15 @@ class Course extends Equatable {
   Map<String, dynamic> toJson() => {
         "id": id,
         "title": title,
-        "areaOfKnowledge": areaOfKnowledge,
+        "category": category,
         "studentList": List<dynamic>.from(students.map((x) => x.toJson())),
       };
 
   @override
-  List<Object?> get props => [title, areaOfKnowledge];
+  List<Object?> get props => [title, category];
 
   static Course fromSnapshot(DocumentSnapshot snap) {
-    Course course =
-        Course(title: snap['title'], areaOfKnowledge: snap['areaOfKnowledge']);
+    Course course = Course(title: snap['title'], category: snap['category']);
     return course;
   }
 }

@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tothem/src/screens/screens.dart';
 
-import '../../../common/theme/tothem_theme.dart';
-import '../../../common/assets/tothem_icons.dart';
-
 SizedBox buildUpperBox(
     BuildContext context, double screenArea, String imageName) {
   return SizedBox(
@@ -21,7 +18,8 @@ Container buildLowerBox(
     required void Function(String value)? pwdFunction,
     void Function(String value)? rePwdFunction,
     required void Function() buttonFunction,
-    required void Function() googleButtonFunction}) {
+    required void Function() googleButtonFunction,
+    required void Function() saveUserInDB}) {
   return Container(
     decoration: BoxDecoration(
         color: color,
@@ -171,6 +169,12 @@ Form _reusableForm(
       ],
     ),
   );
+}
+
+void registerAndStoreUser(
+    void Function() registerUser, void Function() saveUserInDB) {
+  registerUser;
+  saveUserInDB;
 }
 
 TextField _reusableTextField(

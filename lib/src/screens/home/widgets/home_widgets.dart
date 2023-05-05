@@ -26,7 +26,7 @@ SliverAppBar customSliverAppBar() {
   );
 }
 
-Stack profilePictureHeader() {
+Stack profilePictureHeader(String photoUrl) {
   /// Header containing the profile picture of the signed-in user.
   return Stack(alignment: Alignment.bottomCenter, children: [
     Container(
@@ -42,12 +42,13 @@ Stack profilePictureHeader() {
       child: Container(
         height: 100.h,
         width: 100.w,
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           shape: BoxShape.rectangle,
-          borderRadius: BorderRadius.all(Radius.circular(30)),
+          borderRadius: const BorderRadius.all(Radius.circular(30)),
           image: DecorationImage(
-            image: NetworkImage(
-                'https://patientcaremedical.com/wp-content/uploads/2018/04/male-catheters.jpg'),
+            image: NetworkImage(photoUrl.isNotEmpty
+                ? photoUrl
+                : 'https://cdn-icons-png.flaticon.com/512/149/149071.png'),
           ),
         ),
       ),

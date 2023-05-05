@@ -3,13 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:tothem/src/repository/bloc/category/category_bloc.dart';
-import 'package:tothem/src/repository/category_repository/category_repository.dart';
-import 'package:tothem/src/screens/home/bloc/home_blocs.dart';
-import 'package:tothem/src/screens/home/home_screen.dart';
-import 'package:tothem/src/screens/home/home_screen.dart';
 import 'firebase_options.dart';
-
 import 'package:tothem/src/screens/screens.dart';
 
 Future<void> main() async {
@@ -27,27 +21,37 @@ class TothemApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
+    return MultiRepositoryProvider(
       providers: [
-        BlocProvider(create: (_) => WelcomeBloc()),
-        BlocProvider(create: (_) => HomeBloc()),
-        BlocProvider(
-            create: (_) =>
-                CategoryBloc(categoryRepository: CategoryRepository())),
-        ChangeNotifierProvider(create: (context) => AuthService())
+        RepositoryProvider(create: (context) => AuthRepository()),
+        RepositoryProvider(create: (context) => UserRepository())
       ],
-      child: ScreenUtilInit(
-        builder: (context, child) => MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'tothem',
-            initialRoute: '/home',
-            //home: const Login(),
-            routes: {
-              '/login': (_) => const Login(),
-              '/signup': (_) => const Signup(),
-              '/home': (_) => const HomeScreen(),
-            },
-            theme: TothemTheme.getSeedTheme()),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => WelcomeBloc()),
+          BlocProvider(
+              create: (context) => HomeBloc(
+                  authRepository: context.read<AuthRepository>(),
+                  userRepository: context.read<UserRepository>())),
+          BlocProvider(
+              create: (_) => CategoryBloc(
+                    categoryRepository: CategoryRepository(),
+                  )..add(LoadCategories())),
+          ChangeNotifierProvider(create: (context) => AuthService())
+        ],
+        child: ScreenUtilInit(
+          builder: (context, child) => MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'tothem',
+              initialRoute: '/login',
+              //home: const Login(),
+              routes: {
+                '/login': (_) => const Login(),
+                '/signup': (_) => const Signup(),
+                '/home': (_) => const HomeScreen(),
+              },
+              theme: TothemTheme.getSeedTheme()),
+        ),
       ),
     );
   }

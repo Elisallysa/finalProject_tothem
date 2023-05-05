@@ -30,6 +30,8 @@ class _SignupState extends State<Signup> {
                 }, (value) {
                   context.read<WelcomeBloc>().add(RePwdEvent(value));
                 }, () {
+                  context.read<UserBloc>().add(NewUserRegistered());
+                }, () {
                   WelcomeController(context: context).handleSignUp("mail");
                 }, () {
                   WelcomeController(context: context).handleSignUp("google");
@@ -44,6 +46,7 @@ Widget buildSignupComponents(
     void Function(String value)? mailFunction,
     void Function(String value)? pwdFunction,
     void Function(String value)? rePwdFunction,
+    void Function() saveUserInDB,
     void Function() handleSignUp,
     void Function() handleGoogleSignUp) {
   return Column(children: [
@@ -56,6 +59,7 @@ Widget buildSignupComponents(
         mailFunction: mailFunction,
         pwdFunction: pwdFunction,
         rePwdFunction: rePwdFunction,
+        saveUserInDB: saveUserInDB,
         buttonFunction: handleSignUp,
         googleButtonFunction: handleGoogleSignUp)
   ]);

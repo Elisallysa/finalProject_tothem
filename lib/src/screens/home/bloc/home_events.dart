@@ -1,10 +1,29 @@
-abstract class HomeEvent {
-// Abstract class containing Log in and Sign up events.
-  const HomeEvent();
+import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
+
+import '../../../models/user.dart';
+
+abstract class HomeEvent extends Equatable {
+  @override
+  List<Object> get props => [];
 }
 
-class UserInfoEvent extends HomeEvent {
-// MailEvent event class gets a String with the Email address value.
-  final String userName;
-  const UserInfoEvent(this.userName);
+class AuthUserChanged extends HomeEvent {
+  final auth.User? authUser;
+  final User? user;
+
+  AuthUserChanged({required this.authUser, this.user});
+
+  @override
+  List<Object> get props => [];
+}
+
+class NewUserRegistered extends HomeEvent {
+  final auth.User? authUser;
+  final User? user;
+
+  NewUserRegistered({required this.authUser, this.user});
+
+  @override
+  List<Object> get props => [];
 }

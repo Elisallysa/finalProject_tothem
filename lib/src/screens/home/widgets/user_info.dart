@@ -2,17 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:tothem/src/screens/screens.dart';
 
 class UserInfoContainer extends StatelessWidget {
-  final String userName = 'John';
-  final String userLastname = 'Doe';
-  final String userRole = 'Estudiante';
+  final String userName;
+  final String userLastname;
+  final String userRole;
   final Map<String, String> userInfo = {'nombre': 'elisa'};
 
   UserInfoContainer(
-      {required userName,
-      required userLastName,
-      required userRole,
-      userInfo,
+      {this.userName = '',
+      this.userLastname = '',
+      this.userRole = '',
       super.key});
+
+  UserInfoContainer copyWith({
+    String? userName,
+    String? userLastname,
+    String? userRole,
+  }) {
+    return UserInfoContainer(
+      userName: userName ?? this.userName,
+      userLastname: userLastname ?? this.userLastname,
+      userRole: userRole ?? this.userRole,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
