@@ -33,7 +33,7 @@ class TothemTheme {
                 iconColor: MaterialStatePropertyAll(rybGreen),
                 surfaceTintColor: MaterialStatePropertyAll(brinkPink))),
         iconTheme: const IconThemeData(color: TothemTheme.rybGreen),
-        buttonTheme: ButtonThemeData(buttonColor: brinkPink),
+        buttonTheme: const ButtonThemeData(buttonColor: brinkPink),
         primaryIconTheme: const IconThemeData(color: Colors.yellow),
         appBarTheme:
             const AppBarTheme(iconTheme: IconThemeData(color: Colors.white)),
