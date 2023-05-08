@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:tothem/src/repository/bloc/course/course_bloc.dart';
+import 'package:tothem/src/screens/home/home.dart';
 import 'firebase_options.dart';
 import 'package:tothem/src/screens/screens.dart';
 
@@ -23,8 +25,12 @@ class TothemApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider(create: (context) => AuthRepository()),
-        RepositoryProvider(create: (context) => UserRepository())
+        RepositoryProvider(
+            key: UniqueKey(), create: (context) => AuthRepository()),
+        RepositoryProvider(
+            key: UniqueKey(), create: (context) => UserRepository()),
+        RepositoryProvider(
+            key: UniqueKey(), create: (context) => CourseRepository())
       ],
       child: MultiBlocProvider(
         providers: [
@@ -37,6 +43,11 @@ class TothemApp extends StatelessWidget {
               create: (_) => CategoryBloc(
                     categoryRepository: CategoryRepository(),
                   )..add(LoadCategories())),
+          BlocProvider(
+              create: (context) => CourseBloc(
+                    authRepository: context.read<AuthRepository>(),
+                    courseRepository: context.read<CourseRepository>(),
+                  )..add(LoadCourses())),
           ChangeNotifierProvider(create: (context) => AuthService())
         ],
         child: ScreenUtilInit(

@@ -11,6 +11,7 @@ SizedBox buildUpperBox(
 
 Container buildLowerBox(
     {required BuildContext context,
+    required double screenArea,
     required Color color,
     required bool wrongCredentials,
     required String title,
@@ -21,6 +22,8 @@ Container buildLowerBox(
     required void Function() googleButtonFunction,
     required void Function() saveUserInDB}) {
   return Container(
+    constraints: BoxConstraints(
+        minHeight: MediaQuery.of(context).size.height * screenArea),
     decoration: BoxDecoration(
         color: color,
         borderRadius: const BorderRadius.only(

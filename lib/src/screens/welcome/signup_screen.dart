@@ -50,9 +50,10 @@ Widget buildSignupComponents(
     void Function() handleSignUp,
     void Function() handleGoogleSignUp) {
   return Column(children: [
-    buildUpperBox(context, 0.30, '9.png'),
+    buildUpperBox(context, 0.30, 'register.png'),
     buildLowerBox(
         context: context,
+        screenArea: 0.7,
         color: Colors.white,
         wrongCredentials: false,
         title: 'Regístrate',

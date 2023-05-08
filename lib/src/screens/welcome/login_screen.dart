@@ -45,9 +45,10 @@ Widget buildLoginComponents(
   void Function() handleGoogleLogIn,
 ) {
   return Column(children: [
-    buildUpperBox(context, 0.30, '7.png'),
+    buildUpperBox(context, 0.30, 'login.png'),
     buildLowerBox(
         context: context,
+        screenArea: 0.7,
         color: Colors.white,
         wrongCredentials: false,
         title: 'Iniciar sesión',

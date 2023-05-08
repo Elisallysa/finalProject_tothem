@@ -3,9 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tothem/src/screens/home/home.dart';
 
-import '../../repository/bloc/category/category_bloc.dart';
-import '../../repository/bloc/category/category_state.dart';
-
 class HomeScreen extends StatelessWidget {
   final String? userName;
   final String? userLastName;
@@ -68,19 +65,19 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  BlocBuilder<CategoryBloc, CategoryState>(
+                  BlocBuilder<CourseBloc, CourseState>(
                       builder: (context, state) {
-                    if (state is CategoryLoading) {
+                    if (state is CourseLoading) {
                       return SliverFillRemaining(
                         child: whiteBackgroundContainer(
                             const Center(child: CircularProgressIndicator())),
                       );
-                    } else if (state is CategoryLoaded) {
+                    } else if (state is CourseLoaded) {
                       return SliverList(
                         delegate: SliverChildListDelegate(
-                          state.categories.map((category) {
-                            return whiteBackgroundContainer(CourseCard(
-                                key: key, subheading: category.title));
+                          state.courses.map((category) {
+                            return whiteBackgroundContainer(
+                                CourseCard(key: key, heading: category.title));
                           }).toList(),
                         ),
                       );
@@ -119,38 +116,5 @@ class HomeScreen extends StatelessWidget {
             },
           );
         }));
-  }
-}
-
-class HeaderWidget extends StatelessWidget {
-  final String text;
-
-  HeaderWidget(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      child: Text('jadfas'),
-      color: Colors.grey[200],
-    );
-  }
-}
-
-class BodyWidget extends StatelessWidget {
-  final Color color;
-
-  BodyWidget(this.color);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        height: 80.0,
-        color: color,
-        alignment: Alignment.center,
-        child: Card(
-          color: Colors.white,
-          child: Text('Terjadif'),
-        ));
   }
 }

@@ -1,3 +1,6 @@
+export 'package:tothem/src/repository/bloc/course/course_bloc.dart';
+export 'package:tothem/src/repository/bloc/course/course_events.dart';
+export 'package:tothem/src/repository/bloc/course/course_state.dart';
 export 'package:tothem/src/screens/home/bloc/home_blocs.dart';
 export 'package:tothem/src/screens/home/bloc/home_events.dart';
 export 'package:tothem/src/screens/home/bloc/home_states.dart';
