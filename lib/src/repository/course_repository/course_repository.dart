@@ -19,22 +19,19 @@ class CourseRepository extends BaseCourseRepository {
   Future<List<Course>> getRegCourses(String studentUid) async {
     final querySnapshot = await _firebaseFirestore
         .collection('registered_courses')
-        .doc(studentUid)
+        .where(FieldPath.documentId, isGreaterThanOrEqualTo: studentUid)
         .get();
 
-    final data = querySnapshot.data();
+    final List<Course> courses = [];
 
-    if (data != null && data.isNotEmpty) {
-      final List<List<dynamic>> coursesData = data['courses'];
-      int index = 0;
-      final List<Course> courses = coursesData.map((courseData) {
-        final courseInfo = courseData[index];
-        return Course(title: courseInfo['title']);
-      }).toList();
-
-      return courses;
-    } else {
-      return <Course>[];
+    for (var doc in querySnapshot.docs) {
+      int courseNumber = 1;
+      while (doc.data().containsKey('course$courseNumber')) {
+        final course = Course.fromJson(doc.data()['course$courseNumber']);
+        courses.add(course);
+        courseNumber++;
+      }
     }
+    return courses;
   }
 }

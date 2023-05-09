@@ -12,7 +12,7 @@ class Course extends Equatable {
   final List<User> students;
 
   const Course(
-      {this.id,
+      {this.id = '',
       this.title = '',
       this.category = '',
       this.trainingHours = 0,
@@ -37,11 +37,7 @@ class Course extends Equatable {
   }
 
   factory Course.fromJson(Map<String, dynamic> json) => Course(
-        id: json["course_id"],
-        title: json["title"],
-        category: json["category"],
-        students:
-            List<User>.from(json["studentList"].map((x) => Course.fromJson(x))),
+        id: json['course_id'],
       );
 
   Map<String, dynamic> toJson() => {
