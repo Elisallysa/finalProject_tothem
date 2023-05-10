@@ -1,44 +1,60 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:const_date_time/const_date_time.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tothem/src/models/user.dart';
 
 class Course extends Equatable {
   final String? id;
   final String title;
+  final String code;
   final String category;
   final int trainingHours;
-  final String teacherId;
+  final String teacher;
+  final String description;
   final List<User> students;
+  final DateTime? registerDate;
 
   const Course(
       {this.id = '',
       this.title = '',
+      this.code = '',
       this.category = '',
       this.trainingHours = 0,
-      this.teacherId = '',
-      this.students = const <User>[]});
+      this.teacher = '',
+      this.description = '',
+      this.students = const <User>[],
+      this.registerDate = const ConstDateTime(0)});
 
   Course copyWith({
     String? id,
     String? title,
+    String? code,
     String? category,
     int? trainingHours,
-    String? teacherId,
+    String? teacher,
+    String? description,
     List<User>? students,
+    DateTime? registerDate,
   }) {
     return Course(
         id: id ?? this.id,
         title: title ?? this.title,
+        code: code ?? this.code,
         category: category ?? this.category,
         trainingHours: trainingHours ?? this.trainingHours,
-        teacherId: teacherId ?? this.teacherId,
-        students: students ?? this.students);
+        teacher: teacher ?? this.teacher,
+        description: description ?? this.description,
+        students: students ?? this.students,
+        registerDate: registerDate ?? this.registerDate);
   }
 
   factory Course.fromJson(Map<String, dynamic> json) => Course(
-        id: json['course_id'],
-      );
+      id: json['course_id'],
+      category: json['category'],
+      title: json['title'],
+      teacher: json['teacher_name'],
+      description: json['description']);
 
   Map<String, dynamic> toJson() => {
         "id": id,

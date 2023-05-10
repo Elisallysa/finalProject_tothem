@@ -33,7 +33,7 @@ class HomeScreen extends StatelessWidget {
                             UserInfoContainer(
                                 userName: state.authUser != null
                                     ? state.authUser!.displayName!
-                                    : 'eo',
+                                    : 'Tu Nombre',
                                 userLastname: '',
                                 userRole: state.user?.role ?? ''),
                             whiteBackgroundContainer(
@@ -75,9 +75,13 @@ class HomeScreen extends StatelessWidget {
                     } else if (state is CourseLoaded) {
                       return SliverList(
                         delegate: SliverChildListDelegate(
-                          state.courses.map((category) {
-                            return whiteBackgroundContainer(
-                                CourseCard(key: key, heading: category.title));
+                          state.courses.map((course) {
+                            return whiteBackgroundContainer(CourseCard(
+                                key: key,
+                                heading: course.title,
+                                subheading: course.category,
+                                teacherName: course.teacher,
+                                courseDescription: course.description));
                           }).toList(),
                         ),
                       );

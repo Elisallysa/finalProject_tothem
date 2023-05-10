@@ -24,7 +24,7 @@ class TothemBottomAppBar extends StatelessWidget {
             color: iconColor,
           ),
           Icon(
-            Tothem.beaker,
+            Icons.school_outlined,
             color: iconColor,
           ),
           Icon(
