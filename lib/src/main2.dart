@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:tothem/src/screens/home/home.dart';
+import 'package:tothem/src/screens/desk/bloc/desk_bloc.dart';
 import 'firebase_options.dart';
 import 'package:tothem/src/screens/screens.dart';
 
@@ -44,21 +44,31 @@ class TothemApp extends StatelessWidget {
                   )..add(LoadCategories())),
           BlocProvider(
               create: (context) => CourseBloc(
-                    authRepository: context.read<AuthRepository>(),
-                    courseRepository: context.read<CourseRepository>(),
-                  )..add(LoadCourses())),
+                  authRepository: context.read<AuthRepository>(),
+                  courseRepository: context.read<CourseRepository>())
+                ..add(LoadCourses())),
+          BlocProvider(
+              create: (context) => TeacherCourseBloc(
+                  authRepository: context.read<AuthRepository>(),
+                  courseRepository: context.read<CourseRepository>())
+                ..add(LoadTeacherCourses())),
+          BlocProvider(
+              create: (context) => DeskBloc(
+                  authRepository: context.read<AuthRepository>(),
+                  userRepository: context.read<UserRepository>())),
           ChangeNotifierProvider(create: (context) => AuthService())
         ],
         child: ScreenUtilInit(
           builder: (context, child) => MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'tothem',
-              initialRoute: '/login',
+              initialRoute: '/desk',
               //home: const Login(),
               routes: {
                 '/login': (_) => const Login(),
                 '/signup': (_) => const Signup(),
                 '/home': (_) => const HomeScreen(),
+                '/desk': (_) => const DeskScreen()
               },
               theme: TothemTheme.getSeedTheme()),
         ),

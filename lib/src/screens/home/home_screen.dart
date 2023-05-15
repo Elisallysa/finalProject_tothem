@@ -4,12 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tothem/src/screens/home/home.dart';
 
 class HomeScreen extends StatelessWidget {
-  final String? userName;
-  final String? userLastName;
-  final String? userRole;
-
-  const HomeScreen({Key? key, this.userName, this.userLastName, this.userRole})
-      : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

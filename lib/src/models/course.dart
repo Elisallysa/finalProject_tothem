@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:const_date_time/const_date_time.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tothem/src/models/user.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class Course extends Equatable {
   final String? id;
@@ -13,6 +14,7 @@ class Course extends Equatable {
   final String teacher;
   final String description;
   final List<User> students;
+  final DateTime? createDate;
   final DateTime? registerDate;
 
   const Course(
@@ -24,6 +26,7 @@ class Course extends Equatable {
       this.teacher = '',
       this.description = '',
       this.students = const <User>[],
+      this.createDate = const ConstDateTime(0),
       this.registerDate = const ConstDateTime(0)});
 
   Course copyWith({
@@ -35,6 +38,7 @@ class Course extends Equatable {
     String? teacher,
     String? description,
     List<User>? students,
+    DateTime? createDate,
     DateTime? registerDate,
   }) {
     return Course(
@@ -46,6 +50,7 @@ class Course extends Equatable {
         teacher: teacher ?? this.teacher,
         description: description ?? this.description,
         students: students ?? this.students,
+        createDate: createDate ?? this.createDate,
         registerDate: registerDate ?? this.registerDate);
   }
 
@@ -67,7 +72,15 @@ class Course extends Equatable {
   List<Object?> get props => [title, category];
 
   static Course fromSnapshot(DocumentSnapshot snap) {
-    Course course = Course(title: snap['title'], category: snap['category']);
+    Timestamp createDate = snap['create_date'];
+
+    Course course = Course(
+        title: snap['title'],
+        category: snap['category'],
+        id: snap.id,
+        description: snap['description'],
+        createDate: createDate.toDate());
+
     return course;
   }
 }

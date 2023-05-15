@@ -56,15 +56,6 @@ Stack profilePictureHeader(String photoUrl) {
   ]);
 }
 
-Container whiteBackgroundContainer(Widget child) {
-  return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(width: 0, color: Colors.white),
-      ),
-      child: child);
-}
-
 // ------- WIDGETS I'M NOT CURRENTLY USING -----
 
 Column getBackground(double headerHeight) {
@@ -107,13 +98,13 @@ Column getContentContainer(BuildContext context, double headerHeight) {
   return Column(children: [
     Container(
       height: headerHeight,
-      color: Color.fromRGBO(23, 22, 22, 0.2),
+      color: const Color.fromRGBO(23, 22, 22, 0.2),
       width: MediaQuery.of(context).size.width * 0.8,
     ),
     Expanded(
       flex: 1,
       child: Container(
-        padding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+        padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
         child: GridView.count(
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
@@ -127,7 +118,7 @@ Column getContentContainer(BuildContext context, double headerHeight) {
               child: Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[FlutterLogo(), Text('data')],
+                  children: const <Widget>[FlutterLogo(), Text('data')],
                 ),
               ),
             );

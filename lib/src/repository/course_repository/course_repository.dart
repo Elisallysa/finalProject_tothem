@@ -43,6 +43,17 @@ class CourseRepository extends BaseCourseRepository {
     return courses;
   }
 
+  Stream<List<Course>> getTeacherCourses(String mail) {
+    String userMail = mail.substring(0, mail.indexOf('@'));
+
+    return _firebaseFirestore
+        .collection('courses')
+        .where(FieldPath.documentId, isGreaterThanOrEqualTo: userMail)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Course.fromSnapshot(doc)).toList());
+  }
+
   @override
   Future<void> createCourse(Course course, User user) async {
     Map<String, String> categoryCodes = <String, String>{};

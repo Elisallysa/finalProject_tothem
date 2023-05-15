@@ -35,8 +35,10 @@ class TothemTheme {
         iconTheme: const IconThemeData(color: TothemTheme.rybGreen),
         buttonTheme: const ButtonThemeData(buttonColor: brinkPink),
         primaryIconTheme: const IconThemeData(color: Colors.yellow),
-        appBarTheme:
-            const AppBarTheme(iconTheme: IconThemeData(color: Colors.white)),
+        appBarTheme: AppBarTheme(
+            titleTextStyle: whiteHeader,
+            backgroundColor: TothemTheme.rybGreen,
+            iconTheme: const IconThemeData(color: Colors.white)),
         useMaterial3: true,
         fontFamily: openSansFont);
   }
@@ -86,9 +88,11 @@ class TothemTheme {
       color: Colors.black, fontSize: 24, fontWeight: FontWeight.w700);
   static TextStyle smallTitle = GoogleFonts.openSans(
       color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600);
+  static TextStyle whiteHeader =
+      GoogleFonts.openSans(color: Colors.white, fontSize: 20);
   static TextStyle whiteTitle = GoogleFonts.openSans(
       color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600);
-  static TextStyle whiteSubitle = GoogleFonts.openSans(
+  static TextStyle whiteSubtitle = GoogleFonts.openSans(
       color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400);
   static TextStyle bodyText = GoogleFonts.openSans(
       color: Colors.black, fontSize: 18, fontWeight: FontWeight.normal);
@@ -96,7 +100,6 @@ class TothemTheme {
       color: Colors.black, fontSize: 24, fontWeight: FontWeight.w500);
   static TextStyle silverText = GoogleFonts.openSans(
       color: silver, fontSize: 14, fontWeight: FontWeight.normal);
-
   static TextStyle clickableText = GoogleFonts.openSans(
       color: darkerLime, fontSize: 14, fontWeight: FontWeight.w500);
   static TextStyle buttonTextW = GoogleFonts.openSans(
@@ -105,4 +108,8 @@ class TothemTheme {
       color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500);
   static TextStyle buttonTextP = GoogleFonts.openSans(
       color: brinkPink, fontSize: 14, fontWeight: FontWeight.w500);
+  static TextStyle dialogTitle = GoogleFonts.openSans(
+      color: Colors.black, fontSize: 20, fontWeight: FontWeight.w600);
+  static TextStyle dialogFields = GoogleFonts.openSans(
+      color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400);
 }

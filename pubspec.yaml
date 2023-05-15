@@ -27,6 +27,7 @@ dependencies:
   fluttertoast: ^8.2.1
   cloud_firestore: ^4.5.3
   get: ^4.6.5
+  timeago: ^3.3.0
 
 dev_dependencies:
   flutter_test:

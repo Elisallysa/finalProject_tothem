@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tothem/src/models/user.dart';
-import 'package:tothem/src/repository/bloc/user/user_events.dart';
 import 'package:tothem/src/screens/screens.dart';
 
 class Login extends StatefulWidget {

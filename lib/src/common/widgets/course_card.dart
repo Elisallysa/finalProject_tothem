@@ -14,7 +14,7 @@ class CourseCard extends StatelessWidget {
       this.heading = 'Título del curso',
       this.subheading = 'Área de conocimiento',
       this.teacherName = 'John Doe',
-      this.imagePath = '',
+      this.imagePath = 'assets/images/coursebackground.png',
       this.courseDescription = 'Descripción del curso.'});
 
   @override
@@ -33,9 +33,9 @@ class CourseCard extends StatelessWidget {
                     color: Colors.amber,
                     height: 100.0,
                     width: double.maxFinite,
-                    child: Image.network(
-                      'https://img.freepik.com/foto-gratis/textura-pared-estuco-azul-marino-relieve-decorativo-abstracto-grunge-fondo-color-rugoso-gran-angular_1258-28311.jpg',
-                      fit: BoxFit.fill,
+                    child: Image.asset(
+                      imagePath,
+                      fit: BoxFit.cover,
                     )),
                 ListTile(
                   title: Text(
@@ -48,10 +48,10 @@ class CourseCard extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child:
-                            Text(subheading, style: TothemTheme.whiteSubitle),
+                            Text(subheading, style: TothemTheme.whiteSubtitle),
                       ),
                       Text(teacherName.toUpperCase(),
-                          style: TothemTheme.whiteSubitle),
+                          style: TothemTheme.whiteSubtitle),
                     ],
                   ),
                   trailing:

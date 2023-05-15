@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../screens/screens.dart';
+import 'package:tothem/src/common/assets/tothem_icons.dart';
+import 'package:tothem/src/common/theme/tothem_theme.dart';
 
 IconButton getGreenIconButton(BuildContext context, void Function() onPressed,
     IconData icon, Color iconBorder) {
@@ -22,4 +23,21 @@ IconButton getGreenIconButton(BuildContext context, void Function() onPressed,
       }),
     ),
   );
+}
+
+AppBar standardAppBar(Text title) {
+  return AppBar(
+    leading: const Icon(Tothem.menu),
+    title: title,
+    shadowColor: TothemTheme.rybGreen,
+  );
+}
+
+Container whiteBackgroundContainer(Widget child) {
+  return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(width: 0, color: Colors.white),
+      ),
+      child: child);
 }
