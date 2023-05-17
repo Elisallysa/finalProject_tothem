@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:tothem/src/models/course.dart';
+import 'package:tothem/src/repository/course_repository/course_repository.dart';
+
 import 'package:tothem/src/screens/desk/desk.dart';
 
 class DeskScreen extends StatelessWidget {
@@ -9,6 +12,7 @@ class DeskScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        bottomNavigationBar: const TothemBottomAppBar(),
         appBar: standardAppBar(const Text('Mi escritorio')),
         body: BlocBuilder<DeskBloc, DeskState>(builder: (context, state) {
           return LayoutBuilder(builder:
@@ -28,7 +32,9 @@ class DeskScreen extends StatelessWidget {
                               getGreenIconButton(context, () {}, Icons.search,
                                   TothemTheme.rybGreen),
                               getGreenIconButton(context, () {
-                                showAddCourseDialog(context);
+                                showAddCourseDialog(
+                                  context,
+                                );
                               }, Icons.add, TothemTheme.rybGreen)
                             ],
                           )
@@ -70,8 +76,11 @@ class DeskScreen extends StatelessWidget {
 }
 
 showAddCourseDialog(BuildContext context) {
-  TextEditingController titleController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  Course newCourse;
+  List<String> categories = [];
 
   showDialog(
     context: context,
@@ -86,6 +95,9 @@ showAddCourseDialog(BuildContext context) {
               children: [
                 TextFormField(
                   controller: titleController,
+                  validator: (value) {
+                    return value!.isNotEmpty ? null : "Campo vacío";
+                  },
                   decoration: InputDecoration(
                       labelText: "Título del curso",
                       labelStyle: TothemTheme.dialogFields),
@@ -98,6 +110,9 @@ showAddCourseDialog(BuildContext context) {
                     onChanged: null),
                 TextFormField(
                   controller: descriptionController,
+                  validator: (value) {
+                    return value!.isNotEmpty ? null : "Campo vacío";
+                  },
                   decoration: InputDecoration(
                       labelText: "Descripción",
                       labelStyle: TothemTheme.dialogFields),
@@ -108,9 +123,15 @@ showAddCourseDialog(BuildContext context) {
         ),
         actions: [
           ElevatedButton(
-            child: const Text("Crear"),
+            child: Text(
+              "Crear",
+              style: TothemTheme.buttonTextW,
+            ),
             onPressed: () {
-              // your code
+              newCourse = const Course().copyWith(
+                  title: titleController.text,
+                  description: descriptionController.text);
+              print(newCourse.title + newCourse.description);
             },
           ),
         ],

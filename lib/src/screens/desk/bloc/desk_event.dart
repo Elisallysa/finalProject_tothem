@@ -1,9 +1,14 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:tothem/src/models/course.dart';
 
 import '../../../models/user.dart';
 
 abstract class DeskEvent extends Equatable {
+  final List<String>? categoriesList;
+
+  const DeskEvent({this.categoriesList});
+
   @override
   List<Object> get props => [];
 }
@@ -12,7 +17,8 @@ class AuthUserChanged extends DeskEvent {
   final auth.User? authUser;
   final User? user;
 
-  AuthUserChanged({required this.authUser, this.user});
+  const AuthUserChanged(
+      {super.categoriesList, required this.authUser, this.user});
 
   @override
   List<Object> get props => [];
@@ -22,10 +28,16 @@ class NewUserRegistered extends DeskEvent {
   final auth.User? authUser;
   final User? user;
 
-  NewUserRegistered({required this.authUser, this.user});
+  const NewUserRegistered({required this.authUser, this.user});
 
   @override
   List<Object> get props => [];
 }
 
-class CreateCourse extends DeskEvent {}
+class CreateCourseEvent extends DeskEvent {
+  final Course? course;
+  final auth.User? authUser;
+  const CreateCourseEvent(this.course, this.authUser);
+  @override
+  List<Object> get props => [];
+}

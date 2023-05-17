@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 /// Theme, colors and fonts used in tothem App.
@@ -33,7 +34,15 @@ class TothemTheme {
                 iconColor: MaterialStatePropertyAll(rybGreen),
                 surfaceTintColor: MaterialStatePropertyAll(brinkPink))),
         iconTheme: const IconThemeData(color: TothemTheme.rybGreen),
-        buttonTheme: const ButtonThemeData(buttonColor: brinkPink),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+            style: OutlinedButton.styleFrom(
+                backgroundColor: TothemTheme.brinkPink,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                elevation: 10.h,
+                shadowColor: const Color.fromARGB(255, 128, 36, 105),
+                fixedSize: const Size(double.maxFinite, 50),
+                textStyle: TothemTheme.buttonTextW)),
         primaryIconTheme: const IconThemeData(color: Colors.yellow),
         appBarTheme: AppBarTheme(
             titleTextStyle: whiteHeader,

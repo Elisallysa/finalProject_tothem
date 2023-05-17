@@ -29,7 +29,9 @@ class TothemApp extends StatelessWidget {
         RepositoryProvider(
             key: UniqueKey(), create: (context) => UserRepository()),
         RepositoryProvider(
-            key: UniqueKey(), create: (context) => CourseRepository())
+            key: UniqueKey(), create: (context) => CourseRepository()),
+        RepositoryProvider(
+            key: UniqueKey(), create: (context) => CategoryRepository())
       ],
       child: MultiBlocProvider(
         providers: [
@@ -55,7 +57,9 @@ class TothemApp extends StatelessWidget {
           BlocProvider(
               create: (context) => DeskBloc(
                   authRepository: context.read<AuthRepository>(),
-                  userRepository: context.read<UserRepository>())),
+                  userRepository: context.read<UserRepository>(),
+                  courseRepository: context.read<CourseRepository>(),
+                  categoryRepository: context.read<CategoryRepository>())),
           ChangeNotifierProvider(create: (context) => AuthService())
         ],
         child: ScreenUtilInit(
