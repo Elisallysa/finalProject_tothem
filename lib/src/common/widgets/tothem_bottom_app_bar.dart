@@ -23,7 +23,7 @@ class TothemBottomAppBar extends StatelessWidget {
             IconButton(
               alignment: Alignment.center,
               icon: Icon(
-                Icons.home_outlined,
+                Tothem.home_2,
                 color: iconColor,
               ),
               onPressed: () {
@@ -35,7 +35,7 @@ class TothemBottomAppBar extends StatelessWidget {
             ),
             IconButton(
               icon: Icon(
-                Icons.school_outlined,
+                Tothem.chalkboardTeacher,
                 color: iconColor,
               ),
               onPressed: () {
@@ -46,16 +46,16 @@ class TothemBottomAppBar extends StatelessWidget {
               },
             ),
             IconButton(
-              icon: Icon(Icons.list_alt, color: iconColor),
+              icon: Icon(Tothem.tasks, color: iconColor),
               onPressed: () {},
             ),
             IconButton(
-              icon: Icon(Icons.calendar_month_outlined, color: iconColor),
+              icon: Icon(Tothem.calendar, color: iconColor),
               onPressed: () {},
             ),
             IconButton(
               icon: Icon(
-                Icons.person_2_outlined,
+                Tothem.userAlt,
                 color: iconColor,
               ),
               color: iconColor,

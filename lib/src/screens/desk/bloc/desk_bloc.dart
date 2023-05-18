@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tothem/src/models/course_category.dart';
 import 'package:tothem/src/repository/auth_repository/auth_repository.dart';
 import 'package:tothem/src/repository/category_repository/category_repository.dart';
 import 'package:tothem/src/repository/course_repository/course_repository.dart';
@@ -27,12 +28,12 @@ class DeskBloc extends Bloc<DeskEvent, DeskState> {
         _userRepository = userRepository,
         _courseRepository = courseRepository,
         _categoryRepository = categoryRepository,
-        super(const DeskState.unknown(categoriesList: <String>[])) {
+        super(const DeskState.unknown(categoriesList: <CourseCategory>[])) {
     on<AuthUserChanged>(_onAuthUserChanged);
-    List<String> stringCategories = <String>[];
+    List<CourseCategory> categoriesList = <CourseCategory>[];
     _categoryRepository.getAllCategories().listen((categories) {
       for (var category in categories) {
-        stringCategories.add(category.title);
+        categoriesList.add(category);
       }
     });
 
@@ -41,9 +42,7 @@ class DeskBloc extends Bloc<DeskEvent, DeskState> {
       if (authUser != null) {
         _userRepository.getUser(authUser.uid).listen((user) {
           add(AuthUserChanged(
-              authUser: authUser,
-              user: user,
-              categoriesList: stringCategories));
+              authUser: authUser, user: user, categoriesList: categoriesList));
         });
       } else {
         add(AuthUserChanged(authUser: authUser));
@@ -58,9 +57,9 @@ class DeskBloc extends Bloc<DeskEvent, DeskState> {
         ? emit(DeskState.authenticated(
             authUser: event.authUser!,
             user: event.user!,
-            categoriesList: event.categoriesList ?? <String>[]))
+            categoriesList: event.categoriesList ?? <CourseCategory>[]))
         : emit(DeskState.unauthenticated(
-            categoriesList: event.categoriesList ?? <String>[]));
+            categoriesList: event.categoriesList ?? <CourseCategory>[]));
   }
 
   void _createTeacherCourse(CreateCourseEvent event, Emitter<DeskState> emit) {
@@ -71,7 +70,7 @@ class DeskBloc extends Bloc<DeskEvent, DeskState> {
       } catch (e) {
         print(e);
         emit(DeskState.unknown(
-            categoriesList: event.categoriesList ?? <String>[]));
+            categoriesList: event.categoriesList ?? <CourseCategory>[]));
       }
     }
   }

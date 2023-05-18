@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tothem/src/common/assets/tothem_icons.dart';
 import 'package:tothem/src/common/theme/tothem_theme.dart';
 
 IconButton getGreenIconButton(BuildContext context, void Function() onPressed,
@@ -27,7 +26,7 @@ IconButton getGreenIconButton(BuildContext context, void Function() onPressed,
 
 AppBar standardAppBar(Text title) {
   return AppBar(
-    leading: const Icon(Tothem.menu),
+    leading: const Icon(Icons.menu),
     title: title,
     shadowColor: TothemTheme.rybGreen,
   );

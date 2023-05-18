@@ -131,7 +131,7 @@ Form _reusableForm(
         _reusableTextField(
             labelText: 'Email',
             hintText: 'usuario@mail.com',
-            icon: const Icon(Tothem.mail),
+            icon: const Icon(Icons.mail_outline),
             function: (value) => mailFunction!(value)),
         SizedBox(
           height: 20.h,
@@ -139,7 +139,7 @@ Form _reusableForm(
         _reusableTextField(
             labelText: 'Contraseña',
             hintText: 'Introduce su contraseña',
-            icon: const Icon(Tothem.lock),
+            icon: const Icon(Icons.lock_outlined),
             function: (value) => pwdFunction!(value)),
         SizedBox(
           height: 20.h,
@@ -150,7 +150,7 @@ Form _reusableForm(
             _reusableTextField(
                 labelText: 'Confirmar contraseña',
                 hintText: 'Repite tu contraseña',
-                icon: const Icon(Tothem.lock),
+                icon: const Icon(Icons.lock_outlined),
                 function: (value) => rePwdFunction!(value)),
             SizedBox(
               height: 20.h,

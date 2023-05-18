@@ -1,11 +1,12 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:tothem/src/models/course.dart';
+import 'package:tothem/src/models/course_category.dart';
 
 import '../../../models/user.dart';
 
 abstract class DeskEvent extends Equatable {
-  final List<String>? categoriesList;
+  final List<CourseCategory>? categoriesList;
 
   const DeskEvent({this.categoriesList});
 

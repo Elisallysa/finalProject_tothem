@@ -8,7 +8,6 @@ export 'package:tothem/src/common/theme/tothem_theme.dart';
 export 'package:tothem/src/screens/home/home.dart';
 export 'package:tothem/src/common/widgets/tothem_bottom_app_bar.dart';
 export 'package:tothem/src/screens/home/widgets/user_info.dart';
-export 'package:tothem/src/common/assets/tothem_icons.dart';
 export 'package:tothem/src/common/widgets/course_card.dart';
 export 'package:tothem/src/common/widgets/tothem_common_widgets.dart';
 export 'package:tothem/src/screens/home/widgets/home_widgets.dart';

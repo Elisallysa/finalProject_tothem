@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tothem/src/models/course.dart';
+import 'package:tothem/src/models/course_category.dart';
 import 'package:tothem/src/repository/course_repository/course_repository.dart';
 
 import 'package:tothem/src/screens/desk/desk.dart';
@@ -33,8 +34,7 @@ class DeskScreen extends StatelessWidget {
                                   TothemTheme.rybGreen),
                               getGreenIconButton(context, () {
                                 showAddCourseDialog(
-                                  context,
-                                );
+                                    context, state.categoriesList!);
                               }, Icons.add, TothemTheme.rybGreen)
                             ],
                           )
@@ -75,12 +75,11 @@ class DeskScreen extends StatelessWidget {
   }
 }
 
-showAddCourseDialog(BuildContext context) {
+showAddCourseDialog(BuildContext context, List<CourseCategory> categoriesList) {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  String selectedCategory = '';
   Course newCourse;
-  List<String> categories = [];
 
   showDialog(
     context: context,
@@ -88,36 +87,50 @@ showAddCourseDialog(BuildContext context) {
       return AlertDialog(
         scrollable: true,
         title: Text("Crear curso", style: TothemTheme.dialogTitle),
-        content: Padding(
-          padding: const EdgeInsets.all(2.0),
-          child: Form(
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: titleController,
-                  validator: (value) {
-                    return value!.isNotEmpty ? null : "Campo vacío";
-                  },
-                  decoration: InputDecoration(
-                      labelText: "Título del curso",
-                      labelStyle: TothemTheme.dialogFields),
-                ),
-                DropdownButtonFormField(
+        content: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: Form(
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: titleController,
+                    validator: (value) {
+                      return value!.isNotEmpty ? null : "Campo vacío";
+                    },
                     decoration: InputDecoration(
-                        labelText: "Categoría",
+                        labelText: "Título del curso",
                         labelStyle: TothemTheme.dialogFields),
-                    items: [],
-                    onChanged: null),
-                TextFormField(
-                  controller: descriptionController,
-                  validator: (value) {
-                    return value!.isNotEmpty ? null : "Campo vacío";
-                  },
-                  decoration: InputDecoration(
-                      labelText: "Descripción",
-                      labelStyle: TothemTheme.dialogFields),
-                ),
-              ],
+                  ),
+                  DropdownButtonFormField(
+                      isDense: true,
+                      isExpanded: true,
+                      decoration: InputDecoration(
+                          labelText: "Categoría",
+                          labelStyle: TothemTheme.dialogFields),
+                      items: categoriesList.map((CourseCategory category) {
+                        return DropdownMenuItem<String>(
+                          value: category.title,
+                          child: SizedBox(
+                              width: double.infinity,
+                              child: Text(category.title,
+                                  overflow: TextOverflow.clip)),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        selectedCategory = value ?? '';
+                      }),
+                  TextFormField(
+                    controller: descriptionController,
+                    validator: (value) {
+                      return value!.isNotEmpty ? null : "Campo vacío";
+                    },
+                    decoration: InputDecoration(
+                        labelText: "Descripción",
+                        labelStyle: TothemTheme.dialogFields),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -128,10 +141,14 @@ showAddCourseDialog(BuildContext context) {
               style: TothemTheme.buttonTextW,
             ),
             onPressed: () {
+              CourseCategory categoryObject = categoriesList
+                  .firstWhere((element) => element.title == selectedCategory);
               newCourse = const Course().copyWith(
                   title: titleController.text,
-                  description: descriptionController.text);
-              print(newCourse.title + newCourse.description);
+                  description: descriptionController.text,
+                  category: categoryObject.id);
+              print(
+                  newCourse.title + newCourse.description + newCourse.category);
             },
           ),
         ],

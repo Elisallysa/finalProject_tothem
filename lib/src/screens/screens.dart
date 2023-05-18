@@ -1,4 +1,3 @@
-export 'package:tothem/src/common/assets/tothem_icons.dart';
 export 'package:tothem/src/common/theme/tothem_theme.dart';
 export 'package:tothem/src/common/widgets/flutter_toast.dart';
 export 'package:tothem/src/models/user.dart';

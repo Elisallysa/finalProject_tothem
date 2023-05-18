@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:tothem/src/models/course.dart';
+import 'package:tothem/src/models/course_category.dart';
 
 import '../../../models/user.dart';
 
@@ -12,7 +13,7 @@ class DeskState extends Equatable {
   final auth.User? authUser;
   final User? user;
   final Course? course;
-  final List<String>? categoriesList;
+  final List<CourseCategory>? categoriesList;
 
   const DeskState._(
       {this.status = AuthStatus.unknown,
@@ -21,20 +22,21 @@ class DeskState extends Equatable {
       this.course,
       this.categoriesList});
 
-  const DeskState.unknown({required List<String> categoriesList})
+  const DeskState.unknown({required List<CourseCategory> categoriesList})
       : this._(categoriesList: categoriesList);
 
   const DeskState.authenticated({
     required auth.User authUser,
     required User user,
-    required List<String> categoriesList,
+    required List<CourseCategory> categoriesList,
   }) : this._(
             status: AuthStatus.authenticated,
             authUser: authUser,
             user: user,
             categoriesList: categoriesList);
 
-  const DeskState.unauthenticated({required List<String> categoriesList})
+  const DeskState.unauthenticated(
+      {required List<CourseCategory> categoriesList})
       : this._(
             status: AuthStatus.unauthenticated, categoriesList: categoriesList);
 
