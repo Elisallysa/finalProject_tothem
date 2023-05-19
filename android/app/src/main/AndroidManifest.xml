@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.erovicodes.tothemapp">
    <application
-        android:label="tothem"
+        android:label="Tothem"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

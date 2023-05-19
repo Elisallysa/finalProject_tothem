@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tothem/src/models/course.dart';
 import 'package:tothem/src/repository/auth_repository/auth_repository.dart';
 import 'package:tothem/src/repository/bloc/teacher_course/teacher_course_events.dart';
 import 'package:tothem/src/repository/bloc/teacher_course/teacher_course_state.dart';
@@ -30,9 +31,11 @@ class TeacherCourseBloc extends Bloc<TeacherCourseEvent, TeacherCourseState> {
 
     User? user = _authRepository.getUser();
     if (user != null) {
-      _courseSubscription = _courseRepository
-          .getTeacherCourses(user.email!)
-          .listen((courses) => add(UpdateTeacherCourses(courses)));
+      _courseSubscription =
+          _courseRepository.getTeacherCourses(user.email!).listen((courses) {
+        List<Course> reversedCourses = courses.reversed.toList();
+        add(UpdateTeacherCourses(reversedCourses));
+      });
     } else {
       print('-----USUARIO NULO------');
     }

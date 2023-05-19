@@ -56,8 +56,8 @@ class CourseRepository extends BaseCourseRepository {
 
   @override
   Future<void> createCourse(Course course, User user) async {
-    Map<String, String> categoryCodes = <String, String>{};
-
+/*
+Map<String, String> categoryCodes = <String, String>{};
     Stream<List<CourseCategory>> categories =
         CategoryRepository().getAllCategories();
     await for (var categoryList in categories) {
@@ -67,20 +67,31 @@ class CourseRepository extends BaseCourseRepository {
       }
     }
 
+    await for (var categoryList in CategoryRepository().getAllCategories()) {
+      // iterar sobre la lista
+      for (var category in categoryList) {
+        categoryCodes[category.id] = category.title;
+      }
+    }
+
     String key = categoryCodes.keys.firstWhere(
         (k) => categoryCodes[k] == course.category,
         orElse: () => 'NC');
-
-    String idSuffix = _getCourseCodeSuffix(course.title, key);
+*/
+    String idSuffix = _getCourseCodeSuffix(course.title, course.category);
 
     final today = DateTime.now();
 
+    String month =
+        today.month < 10 ? '0${today.month}' : today.month.toString();
+    String day = today.day < 10 ? '0${today.day}' : today.day.toString();
+
+    String strDate = today.year.toString() + month + day;
+
     return _firebaseFirestore
         .collection("courses")
-        .doc(today.year.toString() +
-            today.month.toString() +
-            today.day.toString() +
-            user.email!.substring(0, user.email!.indexOf('@')) +
+        .doc(user.email!.substring(0, user.email!.indexOf('@')) +
+            strDate +
             idSuffix)
         .set(course.toJson())
         .onError((e, _) => print("Error writing document: $e"));
@@ -102,12 +113,12 @@ class CourseRepository extends BaseCourseRepository {
       String piece2 = wordsInTitle[1];
 
       if (piece1.length > 1 && piece2.length > 1) {
-        suffix = piece1.substring(0 - 2) + piece2.substring(0 - 2);
+        suffix = piece1.substring(0, 2) + piece2.substring(0, 2);
       } else if (piece1.length < 2 && piece2.length > 1) {
         suffix = '$piece1${piece2}XXXX';
-        suffix = suffix.substring(0 - 4);
+        suffix = suffix.substring(0, 4);
       } else if (piece1.length > 1 && piece2.length < 2) {
-        suffix = '${piece1.substring(0 - 2)}${piece2}XXXX';
+        suffix = '${piece1.substring(0, 2)}${piece2}XXXX';
       }
     } else {
       suffix = '${wordsInTitle[0]}XXXX';
@@ -117,6 +128,6 @@ class CourseRepository extends BaseCourseRepository {
       suffix = '${suffix}XXXX';
     }
 
-    return suffix.substring(0 - 4);
+    return suffix.substring(0, 4).toUpperCase();
   }
 }

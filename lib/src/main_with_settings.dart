@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'app.dart';
+import 'app_darkmode.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_service.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,5 +22,5 @@ void main() async {
   // Run the app and pass in the SettingsController. The app listens to the
   // SettingsController for changes, then passes it further down to the
   // SettingsView.
-  runApp(Tothem(settingsController: settingsController));
+  runApp(MyApp(settingsController: settingsController));
 }

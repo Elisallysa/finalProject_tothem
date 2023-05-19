@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tothem/src/models/course_category.dart';
 import 'package:tothem/src/repository/auth_repository/auth_repository.dart';
@@ -63,15 +62,13 @@ class DeskBloc extends Bloc<DeskEvent, DeskState> {
   }
 
   void _createTeacherCourse(CreateCourseEvent event, Emitter<DeskState> emit) {
-    if (event.course != null) {
-      try {
-        _courseRepository.createCourse(event.course!, event.authUser!);
-        emit(DeskState.createCourse(event.course!));
-      } catch (e) {
-        print(e);
-        emit(DeskState.unknown(
-            categoriesList: event.categoriesList ?? <CourseCategory>[]));
-      }
+    try {
+      _courseRepository.createCourse(event.course, event.authUser);
+      emit(DeskState.createCourse(event.course));
+    } catch (e) {
+      print(e);
+      emit(DeskState.unknown(
+          categoriesList: event.categoriesList ?? <CourseCategory>[]));
     }
   }
 

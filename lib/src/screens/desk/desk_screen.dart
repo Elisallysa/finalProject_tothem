@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tothem/src/models/course.dart';
 import 'package:tothem/src/models/course_category.dart';
-import 'package:tothem/src/repository/course_repository/course_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 import 'package:tothem/src/screens/desk/desk.dart';
 
@@ -33,8 +33,8 @@ class DeskScreen extends StatelessWidget {
                               getGreenIconButton(context, () {}, Icons.search,
                                   TothemTheme.rybGreen),
                               getGreenIconButton(context, () {
-                                showAddCourseDialog(
-                                    context, state.categoriesList!);
+                                showAddCourseDialog(context,
+                                    state.categoriesList!, state.authUser!);
                               }, Icons.add, TothemTheme.rybGreen)
                             ],
                           )
@@ -75,11 +75,12 @@ class DeskScreen extends StatelessWidget {
   }
 }
 
-showAddCourseDialog(BuildContext context, List<CourseCategory> categoriesList) {
+showAddCourseDialog(BuildContext context, List<CourseCategory> categoriesList,
+    auth.User authUser) {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
   String selectedCategory = '';
-  Course newCourse;
 
   showDialog(
     context: context,
@@ -91,12 +92,13 @@ showAddCourseDialog(BuildContext context, List<CourseCategory> categoriesList) {
           child: Padding(
             padding: const EdgeInsets.all(2.0),
             child: Form(
+              key: formKey,
               child: Column(
                 children: [
                   TextFormField(
                     controller: titleController,
                     validator: (value) {
-                      return value!.isNotEmpty ? null : "Campo vacío";
+                      return value!.isNotEmpty ? null : "Introduce un título.";
                     },
                     decoration: InputDecoration(
                         labelText: "Título del curso",
@@ -105,6 +107,11 @@ showAddCourseDialog(BuildContext context, List<CourseCategory> categoriesList) {
                   DropdownButtonFormField(
                       isDense: true,
                       isExpanded: true,
+                      validator: (value) {
+                        return value != null
+                            ? null
+                            : "Selecciona una categoría.";
+                      },
                       decoration: InputDecoration(
                           labelText: "Categoría",
                           labelStyle: TothemTheme.dialogFields),
@@ -123,7 +130,9 @@ showAddCourseDialog(BuildContext context, List<CourseCategory> categoriesList) {
                   TextFormField(
                     controller: descriptionController,
                     validator: (value) {
-                      return value!.isNotEmpty ? null : "Campo vacío";
+                      return value!.isNotEmpty
+                          ? null
+                          : "Introduce una descripción";
                     },
                     decoration: InputDecoration(
                         labelText: "Descripción",
@@ -141,14 +150,32 @@ showAddCourseDialog(BuildContext context, List<CourseCategory> categoriesList) {
               style: TothemTheme.buttonTextW,
             ),
             onPressed: () {
-              CourseCategory categoryObject = categoriesList
-                  .firstWhere((element) => element.title == selectedCategory);
-              newCourse = const Course().copyWith(
-                  title: titleController.text,
-                  description: descriptionController.text,
-                  category: categoryObject.id);
-              print(
-                  newCourse.title + newCourse.description + newCourse.category);
+              if (formKey.currentState!.validate()) {
+                try {
+                  CourseCategory categoryObject = categoriesList.firstWhere(
+                      (element) => element.title == selectedCategory);
+                  Course newCourse = const Course().copyWith(
+                      title: titleController.text,
+                      description: descriptionController.text,
+                      category: categoryObject.id,
+                      createDate: DateTime.now());
+
+                  context
+                      .read<DeskBloc>()
+                      .add(CreateCourseEvent(newCourse, authUser));
+                } catch (e) {
+                  print(e);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('No se ha podido añadir el curso')),
+                  );
+                }
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Curso añadido')),
+                );
+                Navigator.pop(context, 'Crear');
+              }
             },
           ),
         ],

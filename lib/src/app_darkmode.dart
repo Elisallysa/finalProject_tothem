@@ -10,8 +10,8 @@ import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
 /// The Widget that configures your application.
-class Tothem extends StatelessWidget {
-  const Tothem({
+class MyApp extends StatelessWidget {
+  const MyApp({
     super.key,
     required this.settingsController,
   });

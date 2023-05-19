@@ -62,10 +62,11 @@ class Course extends Equatable {
       description: json['description']);
 
   Map<String, dynamic> toJson() => {
-        "id": id,
         "title": title,
         "category": category,
-        "studentList": List<dynamic>.from(students.map((x) => x.toJson())),
+        "description": description,
+        "create_date": createDate
+        //"studentList": List<dynamic>.from(students.map((x) => x.toJson())),
       };
 
   @override

@@ -36,9 +36,9 @@ class NewUserRegistered extends DeskEvent {
 }
 
 class CreateCourseEvent extends DeskEvent {
-  final Course? course;
-  final auth.User? authUser;
+  final Course course;
+  final auth.User authUser;
   const CreateCourseEvent(this.course, this.authUser);
   @override
-  List<Object> get props => [];
+  List<Object> get props => [course, authUser];
 }
