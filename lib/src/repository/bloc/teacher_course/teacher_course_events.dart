@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
-
-import '../../../models/course.dart';
+import 'package:tothem/src/repository/bloc/bloc.dart';
 
 class TeacherCourseEvent extends Equatable {
   @override

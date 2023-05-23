@@ -44,6 +44,10 @@ class TothemTheme {
                 fixedSize: const Size(double.maxFinite, 50),
                 textStyle: TothemTheme.buttonTextW)),
         primaryIconTheme: const IconThemeData(color: Colors.yellow),
+        tabBarTheme: const TabBarTheme(
+            indicatorColor: Colors.white,
+            labelColor: Colors.white,
+            unselectedLabelColor: darkGreen),
         appBarTheme: AppBarTheme(
             titleTextStyle: whiteHeader,
             backgroundColor: TothemTheme.rybGreen,
@@ -79,6 +83,8 @@ class TothemTheme {
   // AUX COLORS
   static const Color silver = Color.fromRGBO(155, 161, 171, 1);
   static const Color lightGrey = Color.fromRGBO(241, 246, 247, 1);
+  static const Color darkBlue = Color.fromRGBO(29, 43, 71, 1);
+  static const Color darkGreen = Color.fromRGBO(36, 65, 16, 1);
 
   // Green and pink palette
   static const Color salmonPink = Color.fromRGBO(255, 145, 164, 1);

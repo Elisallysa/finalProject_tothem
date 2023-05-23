@@ -25,3 +25,6 @@ export 'package:tothem/src/screens/welcome/welcome_controller.dart';
 export 'package:tothem/src/screens/desk/desk_screen.dart';
 export 'package:tothem/src/screens/welcome/widgets/welcome_widgets.dart';
 export 'package:tothem/src/services/auth_service.dart';
+export 'package:tothem/src/screens/course_details/bloc/course_details_bloc.dart';
+export 'package:tothem/src/screens/course_details/course_details_screen.dart';
+export 'package:tothem/src/screens/desk/bloc/desk_bloc.dart';

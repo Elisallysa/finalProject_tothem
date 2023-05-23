@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
-
-import '../../../models/course.dart';
+import 'package:tothem/src/repository/bloc/bloc.dart';
 
 class TeacherCourseState extends Equatable {
   const TeacherCourseState();

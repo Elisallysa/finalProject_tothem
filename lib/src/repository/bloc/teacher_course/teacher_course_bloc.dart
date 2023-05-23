@@ -1,22 +1,22 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tothem/src/models/course.dart';
-import 'package:tothem/src/repository/auth_repository/auth_repository.dart';
-import 'package:tothem/src/repository/bloc/teacher_course/teacher_course_events.dart';
-import 'package:tothem/src/repository/bloc/teacher_course/teacher_course_state.dart';
-import '../../course_repository/course_repository.dart';
+import 'package:tothem/src/repository/bloc/bloc.dart';
 
 class TeacherCourseBloc extends Bloc<TeacherCourseEvent, TeacherCourseState> {
   final CourseRepository _courseRepository;
   StreamSubscription? _courseSubscription;
+  final CategoryRepository _categoryRepository;
+  StreamSubscription? _categoryeSubscription;
   final AuthRepository _authRepository;
 
-  TeacherCourseBloc(
-      {required AuthRepository authRepository,
-      required CourseRepository courseRepository})
-      : _authRepository = authRepository,
+  TeacherCourseBloc({
+    required AuthRepository authRepository,
+    required CourseRepository courseRepository,
+    required CategoryRepository categoryRepository,
+  })  : _authRepository = authRepository,
         _courseRepository = courseRepository,
+        _categoryRepository = categoryRepository,
         super(TeacherCourseLoading()) {
     on<LoadTeacherCourses>((event, emit) async {
       await _mapLoadCoursesToState(emit);
@@ -33,8 +33,9 @@ class TeacherCourseBloc extends Bloc<TeacherCourseEvent, TeacherCourseState> {
     if (user != null) {
       _courseSubscription =
           _courseRepository.getTeacherCourses(user.email!).listen((courses) {
-        List<Course> reversedCourses = courses.reversed.toList();
-        add(UpdateTeacherCourses(reversedCourses));
+        courses.sort((a, b) => a.compareTo(b));
+
+        add(UpdateTeacherCourses(courses));
       });
     } else {
       print('-----USUARIO NULO------');

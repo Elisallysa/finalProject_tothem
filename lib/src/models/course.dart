@@ -84,6 +84,11 @@ class Course extends Equatable {
 
     return course;
   }
+
+  /// Sorts [Course] in descending order by [createDate]
+  int compareTo(Course other) {
+    return -createDate!.compareTo(other.createDate!);
+  }
 }
 
 // Método de serialización de string de json a lista de cursos

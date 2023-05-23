@@ -1,11 +1,6 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:tothem/src/models/course_category.dart';
-import 'package:tothem/src/repository/category_repository/category_repository.dart';
 import 'package:tothem/src/repository/course_repository/base_course_repository.dart';
-
 import '../../models/course.dart';
 
 class CourseRepository extends BaseCourseRepository {
@@ -52,6 +47,27 @@ class CourseRepository extends BaseCourseRepository {
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Course.fromSnapshot(doc)).toList());
+  }
+
+  Future<Course?> getCourse(String documentId) async {
+    try {
+      final DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('courses')
+          .doc(documentId)
+          .get();
+
+      if (snapshot.exists) {
+        final Map<String, dynamic>? data =
+            snapshot.data() as Map<String, dynamic>?;
+        if (data != null) {
+          final Course course = Course.fromJson(data);
+          return course;
+        }
+      }
+    } catch (e) {
+      print('Error fetching course from Firestore: $e');
+    }
+    return null;
   }
 
   @override

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:tothem/src/screens/desk/bloc/desk_bloc.dart';
 import 'src/firebase_options.dart';
 import 'package:tothem/src/screens/screens.dart';
 
@@ -52,7 +51,8 @@ class TothemApp extends StatelessWidget {
           BlocProvider(
               create: (context) => TeacherCourseBloc(
                   authRepository: context.read<AuthRepository>(),
-                  courseRepository: context.read<CourseRepository>())
+                  courseRepository: context.read<CourseRepository>(),
+                  categoryRepository: context.read<CategoryRepository>())
                 ..add(LoadTeacherCourses())),
           BlocProvider(
               create: (context) => DeskBloc(
@@ -60,19 +60,24 @@ class TothemApp extends StatelessWidget {
                   userRepository: context.read<UserRepository>(),
                   courseRepository: context.read<CourseRepository>(),
                   categoryRepository: context.read<CategoryRepository>())),
+          BlocProvider(
+              create: (context) => CourseDetailsBloc(
+                  authRepository: context.read<AuthRepository>(),
+                  courseRepository: context.read<CourseRepository>())),
           ChangeNotifierProvider(create: (context) => AuthService())
         ],
         child: ScreenUtilInit(
           builder: (context, child) => MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'tothem',
-              initialRoute: '/desk',
+              initialRoute: '/coursedeets',
               //home: const Login(),
               routes: {
                 '/login': (_) => const Login(),
                 '/signup': (_) => const Signup(),
                 '/home': (_) => const HomeScreen(),
-                '/desk': (_) => const DeskScreen()
+                '/desk': (_) => const DeskScreen(),
+                '/coursedeets': (_) => CourseDetailsScreen()
               },
               theme: TothemTheme.getSeedTheme()),
         ),

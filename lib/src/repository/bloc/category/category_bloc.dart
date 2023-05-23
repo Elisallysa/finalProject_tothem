@@ -1,10 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tothem/src/repository/category_repository/category_repository.dart';
-
-import 'category_events.dart';
-import 'category_state.dart';
+import 'package:tothem/src/repository/bloc/bloc.dart';
+import 'package:tothem/src/repository/bloc/category/category_state.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   final CategoryRepository _categoryRepository;
