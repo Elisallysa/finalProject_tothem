@@ -98,7 +98,6 @@ class TothemTheme {
   // TEXT FONTS AND STYLES
 
   static String? openSansFont = GoogleFonts.openSans().fontFamily;
-
   static TextStyle title = GoogleFonts.openSans(
       color: Colors.black, fontSize: 24, fontWeight: FontWeight.w700);
   static TextStyle smallTitle = GoogleFonts.openSans(
@@ -127,4 +126,8 @@ class TothemTheme {
       color: Colors.black, fontSize: 20, fontWeight: FontWeight.w600);
   static TextStyle dialogFields = GoogleFonts.openSans(
       color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400);
+  static TextStyle tileTitle = GoogleFonts.openSans(
+      color: Colors.black, fontSize: 20, fontWeight: FontWeight.w600);
+  static TextStyle tileDescription = GoogleFonts.openSans(
+      color: Colors.black, fontSize: 14, fontWeight: FontWeight.w400);
 }

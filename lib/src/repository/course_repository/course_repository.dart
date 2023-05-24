@@ -49,6 +49,15 @@ class CourseRepository extends BaseCourseRepository {
             snapshot.docs.map((doc) => Course.fromSnapshot(doc)).toList());
   }
 
+  Stream<List<Course>> getRegisteredCourses(String userId) {
+    return _firebaseFirestore
+        .collection('users')
+        .where(FieldPath.documentId, isGreaterThanOrEqualTo: userId)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Course.fromSnapshot(doc)).toList());
+  }
+
   Future<Course?> getCourse(String documentId) async {
     try {
       final DocumentSnapshot snapshot = await FirebaseFirestore.instance

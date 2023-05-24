@@ -3,22 +3,28 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tothem/src/common/assets/tothem_icons.dart';
-import 'package:tothem/src/common/widgets/tothem_bottom_app_bar.dart';
+import 'package:tothem/src/models/content.dart';
 import 'package:tothem/src/models/course.dart';
-import 'package:tothem/src/screens/course_details/bloc/course_details_bloc.dart';
-import 'package:tothem/src/screens/course_details/bloc/course_details_event.dart';
-import 'package:tothem/src/screens/course_details/bloc/course_details_state.dart';
 import 'package:tothem/src/screens/desk/desk.dart';
-
-import '../../common/widgets/tothem_common_widgets.dart';
+import 'package:tothem/src/screens/course_details/bloc/course_details_state.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
   Course _course;
   auth.User? _authUser;
+  List<Content> _contents;
 
-  CourseDetailsScreen({Key? key, Course? course, auth.User? authUser})
+  CourseDetailsScreen(
+      {Key? key, Course? course, auth.User? authUser, List<Content>? contents})
       : _course = course ?? const Course(id: 'aerodriguez420230520TRANTI'),
         _authUser = authUser ?? auth.FirebaseAuth.instance.currentUser,
+        _contents = contents ??
+            [
+              const Content(
+                  id: 'cont1',
+                  title: 'Título de prueba',
+                  description: 'Descripción del contenido de prueba',
+                  attachments: ['un archivo adjunto'])
+            ],
         super(key: key);
 
   @override
@@ -44,6 +50,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
           builder: (context, state) {
         if (state is CourseLoaded) {
           return Scaffold(
+            bottomNavigationBar: TothemBottomAppBar(key: widget.key),
             appBar: AppBar(
               title: Text(state.course.title),
               // This check specifies which nested Scrollable's scroll notification
@@ -66,7 +73,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                 tabs: <Widget>[
                   Tab(
                     icon: Icon(Icons.content_paste),
-                    text: 'Muro',
+                    text: 'Contenidos',
                   ),
                   Tab(
                     icon: Icon(Tothem.tasks),
@@ -82,22 +89,32 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
             body: TabBarView(
               children: <Widget>[
                 ListView.builder(
-                  itemCount: 25,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      tileColor: index.isOdd
-                          ? Colors.deepOrange
-                          : Colors.lightBlueAccent,
-                      title: Text('eo $index'),
-                    );
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: widget._contents.length,
+                  itemBuilder: (context, index) {
+                    return _buildList(widget._contents[index]);
                   },
                 ),
                 ListView.builder(
                   itemCount: 25,
                   itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      tileColor: index.isOdd ? Colors.green : Colors.yellow,
-                      title: Text('disis $index'),
+                    return ExpansionTile(
+                      backgroundColor: index.isOdd
+                          ? Colors.deepOrange
+                          : Colors.lightBlueAccent,
+                      title: Text('eo $index'),
+                      subtitle: const Text('un subtitulo'),
+                      children: [
+                        const Text(
+                          'Los hijos del expandable',
+                          textAlign: TextAlign.justify,
+                        ),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: const Text('Texto dentro de un contenedor'),
+                        )
+                      ],
                     );
                   },
                 ),
@@ -141,4 +158,24 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
       }),
     );
   }
+}
+
+Widget _buildList(Content content) {
+  /* if (content) {
+      return Builder(
+        builder: (context) {
+          return ListTile(
+              onTap:() => Navigator.push(context, MaterialPageRoute(builder: (context) => SubCategory(list.name))),
+              leading: const SizedBox(),
+              title: Text(list.name)
+          );
+        }
+      );
+    }
+   */
+  return ExpansionTile(
+    leading: const Icon(Tothem.trash),
+    title: Text(content.title, style: TothemTheme.tileTitle),
+    children: [Text(content.description, style: TothemTheme.tileDescription)],
+  );
 }
