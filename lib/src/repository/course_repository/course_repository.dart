@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:tothem/src/models/task.dart';
+import 'package:tothem/src/models/user.dart';
 import 'package:tothem/src/repository/course_repository/base_course_repository.dart';
 import '../../models/course.dart';
 
@@ -38,6 +40,7 @@ class CourseRepository extends BaseCourseRepository {
     return courses;
   }
 
+  @override
   Stream<List<Course>> getTeacherCourses(String mail) {
     String userMail = mail.substring(0, mail.indexOf('@'));
 
@@ -80,7 +83,18 @@ class CourseRepository extends BaseCourseRepository {
   }
 
   @override
-  Future<void> createCourse(Course course, User user) async {
+  Future<List<User>> getStudents(String courseId) async {
+    final QuerySnapshot<Map<String, dynamic>> tasksQuery =
+        await _firebaseFirestore.collection('courses/$courseId/students').get();
+
+    final courseStudents =
+        tasksQuery.docs.map((user) => User.fromSnapshot(user)).toList();
+
+    return courseStudents;
+  }
+
+  @override
+  Future<void> createCourse(Course course, auth.User user) async {
 /*
 Map<String, String> categoryCodes = <String, String>{};
     Stream<List<CourseCategory>> categories =

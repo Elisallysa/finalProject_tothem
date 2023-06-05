@@ -129,5 +129,7 @@ class TothemTheme {
   static TextStyle tileTitle = GoogleFonts.openSans(
       color: Colors.black, fontSize: 20, fontWeight: FontWeight.w600);
   static TextStyle tileDescription = GoogleFonts.openSans(
-      color: Colors.black, fontSize: 14, fontWeight: FontWeight.w400);
+      color: Colors.black, fontSize: 14, fontWeight: FontWeight.w600);
+  static TextStyle descriptionTitle = GoogleFonts.openSans(
+      color: Colors.black, fontSize: 16, fontWeight: FontWeight.w600);
 }

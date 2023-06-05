@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tothem/src/common/assets/tothem_icons.dart';
 import 'package:tothem/src/models/content.dart';
 import 'package:tothem/src/models/course.dart';
+import 'package:tothem/src/screens/course_details/widgets/new_content_dialog.dart';
+import 'package:tothem/src/screens/course_details/widgets/task_card.dart';
 import 'package:tothem/src/screens/desk/desk.dart';
 import 'package:tothem/src/screens/course_details/bloc/course_details_state.dart';
 
@@ -89,42 +91,91 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
             body: TabBarView(
               children: <Widget>[
                 ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: widget._contents.length,
+                  itemCount: state.contents.length,
                   itemBuilder: (context, index) {
-                    return _buildList(widget._contents[index]);
-                  },
-                ),
-                ListView.builder(
-                  itemCount: 25,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ExpansionTile(
-                      backgroundColor: index.isOdd
-                          ? Colors.deepOrange
-                          : Colors.lightBlueAccent,
-                      title: Text('eo $index'),
-                      subtitle: const Text('un subtitulo'),
-                      children: [
-                        const Text(
-                          'Los hijos del expandable',
-                          textAlign: TextAlign.justify,
+                    if (state.contents.isNotEmpty) {
+                      return _buildList(
+                          context, state.contents[index], state.course.id!);
+                    } else {
+                      return whiteBackgroundContainer(
+                        Column(
+                          children: [
+                            SizedBox(
+                                width: 250.w,
+                                child: Image.asset('assets/images/relax.png')),
+                            Text('Este curso no tiene contenidos.',
+                                style: TothemTheme.bodyText,
+                                textAlign: TextAlign.center),
+                          ],
                         ),
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: const Text('Texto dentro de un contenedor'),
-                        )
-                      ],
-                    );
+                      );
+                    }
                   },
                 ),
                 ListView.builder(
-                  itemCount: 25,
+                  itemCount: 1,
+                  itemBuilder: (context, index) {
+                    if (state.tasks.isNotEmpty) {
+                      return Column(
+                          children: state.tasks.map((task) {
+                        return TaskCard(
+                          checkboxFunction: (bool value, context) {
+                            context.read<CourseDetailsBloc>().add(
+                                  CheckboxChangedEvent(
+                                    courseId: state.course.id!,
+                                    taskId: task.id,
+                                    isChecked: value,
+                                  ),
+                                );
+                          },
+                          task: task,
+                          isChecked: task.done,
+                          courseId: state.course.id!,
+                        );
+                      }).toList());
+                    } else {
+                      return Padding(
+                        padding: EdgeInsets.only(top: 20.h),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                                width: 250.w,
+                                child: Image.asset('assets/images/free.png')),
+                            Text('No tienes tareas asignadas.',
+                                style: TothemTheme.bodyText,
+                                textAlign: TextAlign.center),
+                          ],
+                        ),
+                      );
+                    }
+                  },
+                ),
+                ListView.builder(
+                  itemCount: state.students.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      tileColor: index.isOdd ? Colors.brown : Colors.redAccent,
-                      title: Text('waraseo $index'),
-                    );
+                    if (state.students.isNotEmpty) {
+                      return ListTile(
+                        leading: const Icon(
+                          Tothem.user,
+                          color: TothemTheme.rybGreen,
+                        ),
+                        title: Text(state.students[index].name),
+                      );
+                    } else {
+                      return Padding(
+                        padding: EdgeInsets.only(top: 20.h),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                                width: 250.w,
+                                child: Image.asset('assets/images/alone.png')),
+                            Text('Aún no se ha registrado ningún estudiante.',
+                                style: TothemTheme.bodyText,
+                                textAlign: TextAlign.center),
+                          ],
+                        ),
+                      );
+                    }
                   },
                 ),
               ],
@@ -134,19 +185,19 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
           return Scaffold(
               appBar: AppBar(title: const Text('Curso no encontrado')),
               bottomNavigationBar: TothemBottomAppBar(key: widget.key),
-              body: whiteBackgroundContainer(Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
+              body: whiteBackgroundContainer(
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
                         width: 250.w,
-                        child: Image.asset('assets/images/notfound.png')),
+                        child: Image.asset('assets/images/confused.png')),
                     Text('No se ha podido encontrar el curso seleccionado.',
                         style: TothemTheme.bodyText,
                         textAlign: TextAlign.center),
                   ],
                 ),
-              )));
+              ));
         } else {
           return Scaffold(
             appBar: AppBar(title: const Text('Cargando el curso...')),
@@ -160,22 +211,36 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   }
 }
 
-Widget _buildList(Content content) {
-  /* if (content) {
-      return Builder(
-        builder: (context) {
-          return ListTile(
-              onTap:() => Navigator.push(context, MaterialPageRoute(builder: (context) => SubCategory(list.name))),
-              leading: const SizedBox(),
-              title: Text(list.name)
-          );
-        }
-      );
-    }
-   */
+Widget _buildList(BuildContext context, Content content, String courseId) {
   return ExpansionTile(
-    leading: const Icon(Tothem.trash),
-    title: Text(content.title, style: TothemTheme.tileTitle),
-    children: [Text(content.description, style: TothemTheme.tileDescription)],
+    title: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+      IconButton(
+          onPressed: () {
+            showEditContentDialog(context);
+          },
+          icon: const Icon(Tothem.edit)),
+      Text(content.title, style: TothemTheme.tileTitle)
+    ]),
+    children: [
+      Container(
+        padding: const EdgeInsets.all(12),
+        alignment: Alignment.centerLeft,
+        child: Text(content.description, style: TothemTheme.tileDescription),
+      ),
+      if (content.tasks.isNotEmpty)
+        Column(
+          children: content.tasks.map((task) {
+            return TaskCard(
+              checkboxFunction: (bool value, context) {
+                context.read<CourseDetailsBloc>().add(CheckboxChangedEvent(
+                    courseId: courseId, taskId: task.id, isChecked: value));
+              },
+              task: task,
+              isChecked: task.done,
+              courseId: courseId,
+            );
+          }).toList(),
+        )
+    ],
   );
 }

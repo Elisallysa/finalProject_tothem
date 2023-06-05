@@ -54,6 +54,18 @@ class Course extends Equatable {
         registerDate: registerDate ?? this.registerDate);
   }
 
+  Course.copy(Course other)
+      : id = other.id,
+        title = other.title,
+        code = other.code,
+        category = other.category,
+        trainingHours = other.trainingHours,
+        teacher = other.teacher,
+        description = other.description,
+        students = other.students,
+        createDate = other.createDate,
+        registerDate = other.registerDate;
+
   factory Course.fromJson(Map<String, dynamic> json) => Course(
       id: json['course_id'],
       category: json['category'],
