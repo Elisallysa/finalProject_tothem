@@ -86,7 +86,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       Task? updatedTask = await _taskRepository.updateTaskStatus(
         event.course.id!,
         event.task.id,
-        true,
+        !event.task.done,
       );
 
       if (updatedTask != null) {

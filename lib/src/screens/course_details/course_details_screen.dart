@@ -13,20 +13,10 @@ import 'package:tothem/src/screens/course_details/bloc/course_details_state.dart
 class CourseDetailsScreen extends StatefulWidget {
   Course _course;
   auth.User? _authUser;
-  List<Content> _contents;
 
-  CourseDetailsScreen(
-      {Key? key, Course? course, auth.User? authUser, List<Content>? contents})
+  CourseDetailsScreen({Key? key, Course? course, auth.User? authUser})
       : _course = course ?? const Course(id: 'aerodriguez420230520TRANTI'),
         _authUser = authUser ?? auth.FirebaseAuth.instance.currentUser,
-        _contents = contents ??
-            [
-              const Content(
-                  id: 'cont1',
-                  title: 'Título de prueba',
-                  description: 'Descripción del contenido de prueba',
-                  attachments: ['un archivo adjunto'])
-            ],
         super(key: key);
 
   @override

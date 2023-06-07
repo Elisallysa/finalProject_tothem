@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,12 +12,10 @@ import 'package:tothem/src/common/theme/tothem_theme.dart';
 import 'package:tothem/src/common/widgets/tothem_common_widgets.dart';
 import 'package:tothem/src/models/course.dart';
 import 'package:tothem/src/models/task.dart';
-import 'package:tothem/src/repository/auth_repository/auth_repository.dart';
 import 'package:tothem/src/repository/bloc/task/task_event.dart';
 import 'package:tothem/src/repository/bloc/task/task_state.dart';
 import 'package:tothem/src/screens/screens.dart';
 import 'package:tothem/src/screens/task_details/widgets/task_details_widgets.dart';
-
 import '../../repository/bloc/task/task_bloc.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
@@ -155,14 +152,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                             color: TothemTheme.brinkPink,
                                           ),
                                           onPressed: () async {
-                                            String url = await attachment
-                                                .getDownloadURL();
-                                            String token = await widget
-                                                ._currentUser!
-                                                .getIdToken();
-
                                             // _downloadFile(url, token);
-
                                             _donwloadToPhone(attachment);
                                           })); // Crea un widget de texto para cada elemento de la lista
                                 }).toList(),
@@ -172,20 +162,18 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                     ),
                   ),
                   Center(
-                    child: Visibility(
-                        visible: !state.task.done,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: FilledButton(
-                            onPressed: () {
-                              context.read<TaskBloc>().add(TaskDone(
-                                  state.course,
-                                  state.task,
-                                  state.course.teacher));
-                            },
-                            child: const Text('Marcar como completada'),
-                          ),
-                        )),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: FilledButton(
+                        onPressed: () {
+                          context.read<TaskBloc>().add(TaskDone(
+                              state.course, state.task, state.course.teacher));
+                        },
+                        child: Text(state.task.done
+                            ? 'Marcar como no completada'
+                            : 'Marcar como completada'),
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -225,6 +213,13 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
       await fileRef.writeToFile(file);
 
       _showFileIsDownloaded(fileRef);
+
+      String downloadURL;
+
+      storage.UploadTask uploadTask = fileRef.putFile(file);
+
+      downloadURL = await (await uploadTask).ref.getDownloadURL();
+      print(downloadURL);
     } catch (e) {
       print(e);
     }

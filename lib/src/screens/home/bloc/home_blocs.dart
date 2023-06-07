@@ -12,6 +12,7 @@ import 'home_states.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final AuthRepository _authRepository;
   final UserRepository _userRepository;
+
   StreamSubscription<auth.User?>? _authUserSubscription;
   StreamSubscription<User?>? _userSubscription;
 

@@ -1,5 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.erovicodes.tothemapp">
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />  
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/> 
    <application
         android:label="Tothem"
         android:name="${applicationName}"

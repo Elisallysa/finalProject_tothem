@@ -53,12 +53,8 @@ class DeskScreen extends StatelessWidget {
                   return SliverList(
                     delegate: SliverChildListDelegate(
                       state.courses.map((course) {
-                        return whiteBackgroundContainer(CourseCard(
-                            key: key,
-                            heading: course.title,
-                            subheading: course.category,
-                            teacherName: course.teacher,
-                            courseDescription: course.description));
+                        return whiteBackgroundContainer(
+                            CourseCard(key: key, course: course));
                       }).toList(),
                     ),
                   );

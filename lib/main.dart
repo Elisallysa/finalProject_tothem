@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,25 +12,24 @@ import 'package:tothem/src/repository/bloc/task/task_bloc.dart';
 
 import 'package:tothem/src/screens/screens.dart';
 
+import 'src/screens/tasks_screen/bloc/tasks_screen_bloc.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  print('--------idtoken-------');
-  String id = await FirebaseAuth.instance.currentUser!.getIdToken();
-  print(id);
-
+/*
 // Configurar App Check
   final firebaseAppCheck = FirebaseAppCheck.instance;
 
   await firebaseAppCheck.activate(
     // personal reCaptcha public key
     webRecaptchaSiteKey: 'recaptcha-v3-site-key',
-    androidProvider: AndroidProvider.playIntegrity,
+    androidProvider: AndroidProvider.debug,
   );
+  */
   runApp(TothemApp());
 
   //FirebaseAuth.instance.signOut();
@@ -93,6 +91,12 @@ class TothemApp extends StatelessWidget {
                   categoryRepository: context.read<CategoryRepository>())),
           BlocProvider(
               create: (context) => CourseDetailsBloc(
+                  authRepository: context.read<AuthRepository>(),
+                  courseRepository: context.read<CourseRepository>(),
+                  contentRepository: context.read<ContentRepository>(),
+                  taskRepository: context.read<TaskRepository>())),
+          BlocProvider(
+              create: (context) => TasksScreenBloc(
                   authRepository: context.read<AuthRepository>(),
                   courseRepository: context.read<CourseRepository>(),
                   contentRepository: context.read<ContentRepository>(),

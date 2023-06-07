@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import '../../../models/course.dart';
 
 class CourseEvent extends Equatable {
@@ -16,4 +16,14 @@ class UpdateCourses extends CourseEvent {
 
   @override
   List<Object?> get props => [courses];
+}
+
+class JoinCourse extends CourseEvent {
+  final auth.User user;
+  final String courseCode;
+
+  JoinCourse({required this.user, required this.courseCode});
+
+  @override
+  List<Object> get props => [];
 }

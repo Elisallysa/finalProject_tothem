@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tothem/src/common/theme/tothem_theme.dart';
+import 'package:tothem/src/models/course.dart';
+import 'package:tothem/src/screens/course_details/course_details_screen.dart';
+import 'package:tothem/src/screens/tasks_screen/tasks_screen.dart';
 
 class CourseCard extends StatelessWidget {
-  final String heading;
-  final String subheading;
-  final String teacherName;
-  final String imagePath;
-  final String courseDescription;
+  final Course course;
 
-  const CourseCard(
-      {super.key,
-      this.heading = 'Título del curso',
-      this.subheading = 'Área de conocimiento',
-      this.teacherName = 'John Doe',
-      this.imagePath = 'assets/images/coursebackground.png',
-      this.courseDescription = 'Descripción del curso.'});
+  const CourseCard({
+    super.key,
+    this.course = const Course(
+        title: 'Título de prueba',
+        category: 'Categoría',
+        teacherName: 'Nombre del Profe',
+        teacherPhoto: 'assets/images/greenpic.png',
+        description: 'Descripción del curso.',
+        imagePath: 'assets/images/coursebackground.png'),
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +36,14 @@ class CourseCard extends StatelessWidget {
                     height: 100.0,
                     width: double.maxFinite,
                     child: Image.asset(
-                      imagePath,
+                      course.imagePath.isNotEmpty
+                          ? course.imagePath
+                          : 'assets/images/coursebackground.png',
                       fit: BoxFit.cover,
                     )),
                 ListTile(
                   title: Text(
-                    heading,
+                    course.title,
                     style: TothemTheme.whiteTitle,
                   ),
                   subtitle: Column(
@@ -47,10 +51,10 @@ class CourseCard extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10),
-                        child:
-                            Text(subheading, style: TothemTheme.whiteSubtitle),
+                        child: Text(course.category,
+                            style: TothemTheme.whiteSubtitle),
                       ),
-                      Text(teacherName.toUpperCase(),
+                      Text(course.teacherName.toUpperCase(),
                           style: TothemTheme.whiteSubtitle),
                     ],
                   ),
@@ -68,20 +72,18 @@ class CourseCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(16.0),
                     alignment: Alignment.topLeft,
-                    child: Text(courseDescription),
+                    child: Text(course.description),
                   ),
                   Positioned(
-                    top: -40,
+                    top: -55,
                     right: 20,
                     child: Container(
                       height: 60.h,
                       width: 60.w,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: NetworkImage(
-                              'https://patientcaremedical.com/wp-content/uploads/2018/04/male-catheters.jpg'),
-                        ),
+                            image: _getImage(course.teacherPhoto)),
                       ),
                     ),
                   ),
@@ -96,7 +98,14 @@ class CourseCard extends StatelessWidget {
                   child: IconButton(
                     icon: const Icon(Icons.remove_red_eye_outlined,
                         color: Colors.white),
-                    onPressed: () {/* ... */},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                CourseDetailsScreen(course: course)),
+                      );
+                    },
                   ),
                 ),
                 Ink(
@@ -109,12 +118,29 @@ class CourseCard extends StatelessWidget {
                       Icons.checklist,
                       color: Colors.white,
                     ),
-                    onPressed: () {/* ... */},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TasksScreen(course: course)),
+                      );
+                    },
                   ),
                 )
               ],
             ),
           ],
         ));
+  }
+}
+
+ImageProvider<Object> _getImage(String imagePath) {
+  if (imagePath.contains('http')) {
+    return NetworkImage(imagePath);
+  } else {
+    if (imagePath.isEmpty) {
+      imagePath = 'assets/images/greenpic.png';
+    }
+    return AssetImage(imagePath);
   }
 }

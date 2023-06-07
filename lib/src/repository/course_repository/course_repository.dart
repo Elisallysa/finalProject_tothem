@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:get/get.dart';
 import 'package:tothem/src/models/task.dart';
 import 'package:tothem/src/models/user.dart';
 import 'package:tothem/src/repository/course_repository/base_course_repository.dart';
@@ -52,6 +53,7 @@ class CourseRepository extends BaseCourseRepository {
             snapshot.docs.map((doc) => Course.fromSnapshot(doc)).toList());
   }
 
+  @override
   Stream<List<Course>> getRegisteredCourses(String userId) {
     return _firebaseFirestore
         .collection('users')
@@ -61,6 +63,7 @@ class CourseRepository extends BaseCourseRepository {
             snapshot.docs.map((doc) => Course.fromSnapshot(doc)).toList());
   }
 
+  @override
   Future<Course?> getCourse(String documentId) async {
     try {
       final DocumentSnapshot snapshot = await FirebaseFirestore.instance
@@ -127,12 +130,19 @@ Map<String, String> categoryCodes = <String, String>{};
 
     String strDate = today.year.toString() + month + day;
 
+    Course newCourse = course.copyWith(
+        createDate: today,
+        teacher: user.uid,
+        teacherName: user.displayName ??
+            user.email!.substring(0, user.email!.indexOf('@')),
+        teacherPhoto: user.photoURL ?? '');
+
     return _firebaseFirestore
         .collection("courses")
         .doc(user.email!.substring(0, user.email!.indexOf('@')) +
             strDate +
             idSuffix)
-        .set(course.toJson())
+        .set(newCourse.toJson())
         .onError((e, _) => print("Error writing document: $e"));
   }
 
@@ -168,5 +178,65 @@ Map<String, String> categoryCodes = <String, String>{};
     }
 
     return suffix.substring(0, 4).toUpperCase();
+  }
+
+  Future<bool> courseCodeExists(String courseCode) async {
+    final docRef =
+        _firebaseFirestore.collection('course_codes').doc(courseCode);
+
+    final doc = await docRef.get();
+    if (!doc.exists) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  Future<void> joinCourse(
+      String courseCode, List<Course> regCourses, String userUid) async {
+    DocumentSnapshot<Map<String, dynamic>> doc = await _firebaseFirestore
+        .collection('course_codes')
+        .doc(courseCode)
+        .get();
+
+    if (doc.exists && doc.data() != null && doc.data()!.isNotEmpty) {
+      String courseId = doc.data()!['course_id'];
+
+      DocumentSnapshot<Map<String, dynamic>> courseDocSnap =
+          await _firebaseFirestore.collection('courses').doc(courseId).get();
+
+      Course course = Course.fromCourseSnapshot(courseDocSnap);
+      Course newCourse = course.copyWith(registerDate: DateTime.now());
+
+      int number = 0;
+      // Get last registered course
+      if (regCourses.isNotEmpty) {
+        String lastId = regCourses.last.id!;
+
+        RegExp regex = RegExp(r'\d+$');
+        Match? match = regex.firstMatch(lastId);
+
+        if (match != null) {
+          String numberString = match.group(0)!;
+          number = int.parse(numberString);
+        }
+      }
+
+      String newCourseName = 'course${(number + 1)}';
+
+      if (regCourses.firstWhereOrNull((element) => element.id == course.id) ==
+          null) {
+        try {
+          final documentReference =
+              FirebaseFirestore.instance.collection('reg_courses').doc(userUid);
+          await documentReference
+              .update({newCourseName: newCourse.toRegCourseJson()});
+        } catch (e) {
+          print('Error al añadir el curso a registered_courses: $e');
+        }
+      } else {
+        throw 'Already joined the course';
+      }
+    }
   }
 }
