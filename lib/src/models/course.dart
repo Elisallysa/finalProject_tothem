@@ -15,7 +15,6 @@ class Course extends Equatable {
   final int trainingHours;
   final String imagePath;
   final String teacher;
-
   final String teacherName;
   final String teacherPhoto;
   final String description;

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:tothem/src/common/theme/tothem_theme.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:tothem/src/models/task.dart';
 import 'package:tothem/src/screens/course_details/bloc/course_details_bloc.dart';
 import 'package:tothem/src/screens/course_details/bloc/course_details_event.dart';
@@ -74,9 +76,21 @@ class TaskCard extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text('Apertura: 17 de junio 2023'),
-                    Text('Cierre: 9 de julio 2023')
+                  children: [
+                    Row(
+                      children: [
+                        const Text('Apertura: ',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(getFormattedDate(task.postDate))
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text('Cierre: ',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(getFormattedDate(task.dueDate))
+                      ],
+                    )
                   ],
                 ),
               ),
@@ -86,4 +100,13 @@ class TaskCard extends StatelessWidget {
       ),
     );
   }
+}
+
+String getFormattedDate(DateTime date) {
+  initializeDateFormatting('es_ES', null);
+
+  String formattedDate = DateFormat.yMMMMd('es_ES').format(date);
+  String time = DateFormat.Hm().format(date);
+
+  return '$formattedDate $time';
 }

@@ -107,7 +107,7 @@ class TothemApp extends StatelessWidget {
           builder: (context, child) => MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'tothem',
-              initialRoute: '/taskdeets',
+              initialRoute: '/home',
               //home: const Login(),
               routes: {
                 '/login': (_) => const Login(),

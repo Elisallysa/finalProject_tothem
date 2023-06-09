@@ -42,3 +42,13 @@ class CourseLoaded extends TasksScreenState {
       required List<Task> tasks})
       : super(course: course, contents: contents, tasks: tasks);
 }
+
+class AllTasksLoaded extends TasksScreenState {
+  final List<Course> coursesAndTasks;
+
+  const AllTasksLoaded({required this.coursesAndTasks})
+      : super(
+            course: const Course(),
+            contents: const <Content>[],
+            tasks: const <Task>[]);
+}

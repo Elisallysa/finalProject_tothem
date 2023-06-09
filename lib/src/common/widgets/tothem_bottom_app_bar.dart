@@ -4,6 +4,7 @@ import 'package:tothem/src/common/assets/tothem_icons.dart';
 import 'package:tothem/src/common/theme/tothem_theme.dart';
 import 'package:tothem/src/screens/desk/desk_screen.dart';
 import 'package:tothem/src/screens/home/home_screen.dart';
+import 'package:tothem/src/screens/tasks_screen/tasks_screen.dart';
 
 class TothemBottomAppBar extends StatelessWidget {
   const TothemBottomAppBar({Key? key}) : super(key: key);
@@ -15,7 +16,6 @@ class TothemBottomAppBar extends StatelessWidget {
     return BottomAppBar(
       elevation: 0,
       height: 60.h,
-      color: Colors.white,
       child: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -47,7 +47,10 @@ class TothemBottomAppBar extends StatelessWidget {
             ),
             IconButton(
               icon: Icon(Tothem.tasks, color: iconColor),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => TasksScreen()));
+              },
             ),
             IconButton(
               icon: Icon(Tothem.calendar, color: iconColor),

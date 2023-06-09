@@ -12,7 +12,7 @@ class TasksScreenEvent extends Equatable {
 }
 
 class CourseLoading extends TasksScreenEvent {
-  final Course course;
+  final Course? course;
   const CourseLoading(this.course);
 }
 
@@ -28,14 +28,9 @@ class CourseInfoLoaded extends TasksScreenEvent {
 }
 
 class AllStudentTasksLoaded extends TasksScreenEvent {
-  final List<Course> loadedCourses;
-  final List<Content> contents;
-  final List<Task> tasks;
+  final List<Course> loadedCoursesAndTasks;
 
-  const AllStudentTasksLoaded(this.loadedCourses, this.contents, this.tasks);
-
-  @override
-  List<Object?> get props => [loadedCourses, contents, tasks];
+  const AllStudentTasksLoaded(this.loadedCoursesAndTasks);
 }
 
 class CheckboxChangedEvent extends TasksScreenEvent {

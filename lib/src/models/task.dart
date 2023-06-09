@@ -4,39 +4,47 @@ import 'package:const_date_time/const_date_time.dart';
 
 class Task {
   final String id;
+  final String courseRef;
   final String title;
   final String description;
   final bool done;
   final DateTime createDate;
+  final DateTime postDate;
   final DateTime dueDate;
   final List<Comment> comments;
   final List<String> attachments;
 
   const Task(
       {this.id = '',
+      this.courseRef = '',
       this.title = '',
       this.description = '',
       this.done = false,
       this.createDate = const ConstDateTime(0),
+      this.postDate = const ConstDateTime(0),
       this.dueDate = const ConstDateTime(0),
       this.comments = const <Comment>[],
       this.attachments = const <String>[]});
 
   Task copyWith(
       {String? id,
+      String? courseRef,
       String? title,
       String? description,
       bool? done,
       DateTime? createDate,
+      DateTime? postDate,
       DateTime? dueDate,
       List<Comment>? comments,
       List<String>? attachments}) {
     return Task(
         id: id ?? this.id,
+        courseRef: courseRef ?? this.courseRef,
         title: title ?? this.title,
         description: description ?? this.description,
         done: done ?? false,
         createDate: createDate ?? this.createDate,
+        postDate: postDate ?? this.postDate,
         dueDate: dueDate ?? this.dueDate,
         comments: comments ?? <Comment>[],
         attachments: attachments ?? <String>[]);
@@ -44,10 +52,12 @@ class Task {
 
   Task.copy(Task other)
       : id = other.id,
+        courseRef = other.courseRef,
         title = other.title,
         description = other.description,
         done = other.done,
         createDate = other.createDate,
+        postDate = other.postDate,
         dueDate = other.dueDate,
         comments = other.comments,
         attachments = other.attachments;
@@ -58,6 +68,7 @@ class Task {
 
   static Task fromMap(Map<String, dynamic> data) {
     Timestamp created = data['create_date'];
+    Timestamp posted = data['publication_date'];
     Timestamp due = data['due_date'];
     List<String> attachments = List<String>.from(data['attachments'] ?? []);
 
@@ -67,6 +78,7 @@ class Task {
         description: data['description'],
         done: data['done'],
         createDate: created.toDate(),
+        postDate: posted.toDate(),
         dueDate: due.toDate(),
         comments: <Comment>[],
         attachments: attachments);
@@ -76,10 +88,12 @@ class Task {
 
   static Task fromSnapshot(DocumentSnapshot snap) {
     Timestamp created = snap['create_date'];
+    Timestamp posted = snap['publication_date'];
     Timestamp due = snap['due_date'];
 
     List<Comment> comments = [];
     List<String> attachments = [];
+    bool done = false;
     try {
       if (snap.exists &&
           snap.data() != null &&
@@ -89,6 +103,19 @@ class Task {
     } catch (e) {
       if (e is StateError) {
         print("No hay atributo attachments: ${e.message}");
+      } else {
+        // Manejar otros tipos de excepciones si es necesario
+        print("Ocurrió un error inesperado: $e");
+      }
+    }
+    try {
+      if (snap.get('done') != null) {
+        done = snap['done'];
+      }
+    } catch (e) {
+      if (e is StateError) {
+        print(
+            "Mapeando Task de colección \"courses\". No existe atributo \"done\". ${e.message}");
       } else {
         // Manejar otros tipos de excepciones si es necesario
         print("Ocurrió un error inesperado: $e");
@@ -107,14 +134,18 @@ class Task {
         id: snap['id'],
         title: snap['title'],
         description: snap['description'],
-        done: snap['done'],
+        done: done,
         createDate: created.toDate(),
+        postDate: posted.toDate(),
         dueDate: due.toDate(),
         comments: comments,
         attachments: attachments);
 
     return task;
   }
+
+  factory Task.fromSimpleJson(Map<String, dynamic> json) =>
+      Task(id: json['id'], done: json['done']);
 }
 
 class Activity extends Task {
@@ -124,10 +155,12 @@ class Activity extends Task {
 
   Activity copyWith(
       {String? id,
+      String? courseRef,
       String? title,
       String? description,
       bool? done,
       DateTime? createDate,
+      DateTime? postDate,
       DateTime? dueDate,
       List<Comment>? comments,
       List<String>? attachments,
@@ -148,10 +181,12 @@ class GroupDynamic extends Task {
 
   GroupDynamic copyWith(
       {String? id,
+      String? courseRef,
       String? title,
       String? description,
       bool? done,
       DateTime? createDate,
+      DateTime? postDate,
       DateTime? dueDate,
       List<Comment>? comments,
       List<String>? attachments,

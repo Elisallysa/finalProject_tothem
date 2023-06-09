@@ -44,32 +44,17 @@ class TothemTheme {
                 fixedSize: const Size(double.maxFinite, 50),
                 textStyle: TothemTheme.buttonTextW)),
         primaryIconTheme: const IconThemeData(color: Colors.yellow),
-        tabBarTheme: const TabBarTheme(
+        tabBarTheme: TabBarTheme(
             indicatorColor: Colors.white,
             labelColor: Colors.white,
-            unselectedLabelColor: darkGreen),
+            unselectedLabelColor: darkGreen.withOpacity(0.5)),
         appBarTheme: AppBarTheme(
             titleTextStyle: whiteHeader,
             backgroundColor: TothemTheme.rybGreen,
             iconTheme: const IconThemeData(color: Colors.white)),
+        bottomAppBarTheme: const BottomAppBarTheme(color: rybGreen),
         useMaterial3: true,
         fontFamily: openSansFont);
-  }
-
-// Not used
-  static ColorScheme tothemColors() {
-    return const ColorScheme.light(
-        brightness: Brightness.light,
-        primary: kellyGreen,
-        onPrimary: Colors.white,
-        secondary: brinkPink,
-        onSecondary: Colors.white,
-        error: Colors.red,
-        onError: Colors.white,
-        background: Colors.white,
-        onBackground: Colors.black,
-        surface: Colors.white,
-        onSurface: Colors.black);
   }
 
   // MAIN COLOR VARIATIONS: LIME
@@ -96,7 +81,6 @@ class TothemTheme {
   static const Color lightGreen = Color.fromRGBO(243, 255, 235, 1);
 
   // TEXT FONTS AND STYLES
-
   static String? openSansFont = GoogleFonts.openSans().fontFamily;
   static TextStyle title = GoogleFonts.openSans(
       color: Colors.black, fontSize: 24, fontWeight: FontWeight.w700);

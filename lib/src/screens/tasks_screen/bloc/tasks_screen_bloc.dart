@@ -36,6 +36,9 @@ class TasksScreenBloc extends Bloc<TasksScreenEvent, TasksScreenState> {
     });
 
     on<CourseInfoLoaded>((event, emit) => _updateCourseToState(event, emit));
+
+    on<AllStudentTasksLoaded>(
+        (event, emit) => _updateTasksToState(event, emit));
   }
 
   Future<void> _loadCourseToState(
@@ -45,23 +48,30 @@ class TasksScreenBloc extends Bloc<TasksScreenEvent, TasksScreenState> {
       try {
         if (course != null) {
           Course? loadedCourse = await _courseRepository.getCourse(course.id!);
+          List<Content> courseContents = [];
+          List<Task> courseTasks = [];
 
           if (loadedCourse != null) {
-            List<Content> courseContents =
+            courseContents =
                 await _contentRepository.getCourseContents(loadedCourse.id!);
 
-            List<Task> courseTasks =
+            courseTasks =
                 await _taskRepository.getCourseTasks(loadedCourse.id!);
 
             add(CourseInfoLoaded(loadedCourse, courseContents, courseTasks));
-          } else {}
+          } else {
+            emit(const CourseError(
+                course: Course(),
+                contents: <Content>[],
+                tasks: <Task>[],
+                error:
+                    'No se ha podido encontrar el curso. Por favor, vuelve a iniciar la aplicación.'));
+          }
         } else {
-          emit(const CourseError(
-              course: Course(),
-              contents: <Content>[],
-              tasks: <Task>[],
-              error:
-                  'No se ha podido encontrar el curso. Por favor, vuelve a iniciar la aplicación.'));
+          List<Course> userCoursesAndTasks =
+              await _taskRepository.getAllUserRegCourses();
+
+          add(AllStudentTasksLoaded(userCoursesAndTasks));
         }
       } catch (error) {
         emit(CourseError(
@@ -136,5 +146,10 @@ class TasksScreenBloc extends Bloc<TasksScreenEvent, TasksScreenState> {
         course: event.loadedCourse,
         contents: event.contents,
         tasks: event.tasks));
+  }
+
+  _updateTasksToState(
+      AllStudentTasksLoaded event, Emitter<TasksScreenState> emit) {
+    emit(AllTasksLoaded(coursesAndTasks: event.loadedCoursesAndTasks));
   }
 }
