@@ -20,4 +20,21 @@ class CategoryRepository extends BaseCategoryRepository {
           .toList();
     });
   }
+
+  Future<Map<String, String>> getCategoriesMap() async {
+    Map<String, String> catMap = {};
+    try {
+      var querySnapshot =
+          await _firebaseFirestore.collection('course_category').get();
+      querySnapshot.docs.forEach((doc) {
+        var id = doc['id'];
+        var title = doc['title'];
+        catMap[id] = title;
+      });
+      return catMap;
+    } catch (e) {
+      print('Error getting categories: $e');
+      return catMap;
+    }
+  }
 }

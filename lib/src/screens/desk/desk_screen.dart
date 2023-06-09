@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tothem/src/models/course.dart';
 import 'package:tothem/src/models/course_category.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:tothem/src/screens/course_details/course_details_screen.dart';
 
 import 'package:tothem/src/screens/desk/desk.dart';
 
@@ -30,8 +31,8 @@ class DeskScreen extends StatelessWidget {
                           Text('Cursos creados', style: TothemTheme.title),
                           ButtonBar(
                             children: [
-                              getGreenIconButton(context, () {}, Icons.search,
-                                  TothemTheme.rybGreen),
+                              // getGreenIconButton(context, () {}, Icons.search,
+                              //     TothemTheme.rybGreen),
                               getGreenIconButton(context, () {
                                 showAddCourseDialog(context,
                                     state.categoriesList!, state.authUser!);
@@ -53,8 +54,14 @@ class DeskScreen extends StatelessWidget {
                   return SliverList(
                     delegate: SliverChildListDelegate(
                       state.courses.map((course) {
-                        return whiteBackgroundContainer(
-                            CourseCard(key: key, course: course));
+                        String categoryName = course.category;
+                        if (state.categories.containsKey(course.category)) {
+                          String catId = course.category;
+                          categoryName =
+                              state.categories[catId] ?? course.category;
+                        }
+                        return whiteBackgroundContainer(CourseCard(
+                            key: key, course: course, category: categoryName));
                       }).toList(),
                     ),
                   );
@@ -125,6 +132,7 @@ showAddCourseDialog(BuildContext context, List<CourseCategory> categoriesList,
                       }),
                   TextFormField(
                     controller: descriptionController,
+                    maxLines: null,
                     validator: (value) {
                       return value!.isNotEmpty
                           ? null
@@ -159,6 +167,17 @@ showAddCourseDialog(BuildContext context, List<CourseCategory> categoriesList,
                   context
                       .read<DeskBloc>()
                       .add(CreateCourseEvent(newCourse, authUser));
+                  bool titititi = context.read<DeskBloc>().state.course == null;
+                  print('amo a ve si e null o no e null: $titititi');
+
+                  /*             // Navega a la pantalla de detalles del curso y pasa el curso seleccionado
+Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => CourseDetailsScreen(course: context
+                      .read<DeskBloc>().state.course),
+  ),
+);*/
                 } catch (e) {
                   print(e);
                   ScaffoldMessenger.of(context).showSnackBar(

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:get/get.dart';
@@ -120,30 +122,54 @@ Map<String, String> categoryCodes = <String, String>{};
         (k) => categoryCodes[k] == course.category,
         orElse: () => 'NC');
 */
-    String idSuffix = _getCourseCodeSuffix(course.title, course.category);
+    try {
+      String idSuffix = _getCourseCodeSuffix(course.title, course.category);
 
-    final today = DateTime.now();
+      final today = DateTime.now();
 
-    String month =
-        today.month < 10 ? '0${today.month}' : today.month.toString();
-    String day = today.day < 10 ? '0${today.day}' : today.day.toString();
+      String month =
+          today.month < 10 ? '0${today.month}' : today.month.toString();
+      String day = today.day < 10 ? '0${today.day}' : today.day.toString();
 
-    String strDate = today.year.toString() + month + day;
+      String strDate = today.year.toString() + month + day;
 
-    Course newCourse = course.copyWith(
-        createDate: today,
-        teacher: user.uid,
-        teacherName: user.displayName ??
-            user.email!.substring(0, user.email!.indexOf('@')),
-        teacherPhoto: user.photoURL ?? '');
+      // Generate course code and checks if code exists in DB
+      String courseCode;
+      do {
+        courseCode = generateRandomCourseCode();
+      } while (await courseCodeExists(courseCode));
 
-    return _firebaseFirestore
-        .collection("courses")
-        .doc(user.email!.substring(0, user.email!.indexOf('@')) +
-            strDate +
-            idSuffix)
-        .set(newCourse.toJson())
-        .onError((e, _) => print("Error writing document: $e"));
+      String courseId = user.email!.substring(0, user.email!.indexOf('@')) +
+          strDate +
+          idSuffix;
+
+      Course newCourse = course.copyWith(
+          createDate: today,
+          teacher: user.uid,
+          id: courseId,
+          code: courseCode,
+          teacherName: user.displayName ??
+              user.email!.substring(0, user.email!.indexOf('@')),
+          teacherPhoto: user.photoURL ?? '');
+
+      await _firebaseFirestore
+          .collection("courses")
+          .doc(courseId)
+          .set(newCourse.toJson())
+          .onError((e, _) => print(
+              "Error writing new course to document in \"courses\" collection: $e"));
+
+      Map<String, dynamic> courseCodeJson = {'course_id': courseId};
+
+      await _firebaseFirestore
+          .collection('course_codes')
+          .doc(courseCode)
+          .set(courseCodeJson)
+          .onError((error, stackTrace) => print(
+              "Error writing new course code to document in \"course_codes\" collection: $e"));
+    } on Exception catch (e) {
+      print('Something happened during creation of course. $e');
+    }
   }
 
   String _getCourseCodeSuffix(String courseTitle, String courseCategory) {
@@ -178,6 +204,19 @@ Map<String, String> categoryCodes = <String, String>{};
     }
 
     return suffix.substring(0, 4).toUpperCase();
+  }
+
+  String generateRandomCourseCode() {
+    final random = Random();
+    const chars =
+        '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!-_?.';
+    String code = '';
+
+    for (int i = 0; i < 6; i++) {
+      code += chars[random.nextInt(chars.length)];
+    }
+
+    return code;
   }
 
   Future<bool> courseCodeExists(String courseCode) async {

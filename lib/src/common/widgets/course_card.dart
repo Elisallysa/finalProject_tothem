@@ -7,14 +7,16 @@ import 'package:tothem/src/screens/tasks_screen/tasks_screen.dart';
 
 class CourseCard extends StatelessWidget {
   final Course course;
+  final String? category;
+  static String defaultProfilePic = 'assets/images/greenpic.png';
 
   const CourseCard({
     super.key,
+    this.category,
     this.course = const Course(
         title: 'Título de prueba',
         category: 'Categoría',
         teacherName: 'Nombre del Profe',
-        teacherPhoto: 'assets/images/greenpic.png',
         description: 'Descripción del curso.',
         imagePath: 'assets/images/coursebackground.png'),
   });
@@ -51,11 +53,11 @@ class CourseCard extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10),
-                        child: Text(course.category,
-                            style: TothemTheme.whiteSubtitle),
+                        child: Text(category ?? course.category,
+                            style: TothemTheme.whiteSubtitleOpacity),
                       ),
                       Text(course.teacherName.toUpperCase(),
-                          style: TothemTheme.whiteSubtitle),
+                          style: TothemTheme.whiteSubtitleOpacity),
                     ],
                   ),
                   trailing:
@@ -132,15 +134,21 @@ class CourseCard extends StatelessWidget {
           ],
         ));
   }
-}
 
-ImageProvider<Object> _getImage(String imagePath) {
-  if (imagePath.contains('http')) {
-    return NetworkImage(imagePath);
-  } else {
-    if (imagePath.isEmpty) {
-      imagePath = 'assets/images/greenpic.png';
+  ImageProvider<Object> _getImage(String imagePath) {
+    try {
+      if (imagePath.contains('http')) {
+        return NetworkImage(imagePath);
+      } else {
+        if (imagePath.isEmpty) {
+          imagePath = defaultProfilePic;
+        }
+
+        ImageProvider<Object> imgProv = AssetImage(imagePath);
+        return imgProv;
+      }
+    } catch (e) {
+      return AssetImage(defaultProfilePic);
     }
-    return AssetImage(imagePath);
   }
 }

@@ -36,6 +36,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool _isEditable = false;
+
+    if ((widget._course.teacher.isNotEmpty && widget._authUser != null) &&
+        (widget._course.teacher == widget._authUser!.uid)) {
+      _isEditable = true;
+    }
+
     return DefaultTabController(
       length: 3,
       child: BlocBuilder<CourseDetailsBloc, CourseDetailsState>(

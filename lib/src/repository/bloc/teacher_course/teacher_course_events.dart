@@ -10,11 +10,12 @@ class LoadTeacherCourses extends TeacherCourseEvent {}
 
 class UpdateTeacherCourses extends TeacherCourseEvent {
   final List<Course> courses;
+  final Map<String, String> categories;
 
-  UpdateTeacherCourses(this.courses);
+  UpdateTeacherCourses(this.courses, this.categories);
 
   @override
-  List<Object?> get props => [courses];
+  List<Object?> get props => [courses, categories];
 }
 
 class AddTeacherCourse extends TeacherCourseEvent {}

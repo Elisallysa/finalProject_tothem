@@ -29,13 +29,17 @@ class TeacherCourseBloc extends Bloc<TeacherCourseEvent, TeacherCourseState> {
   Future<void> _mapLoadCoursesToState(Emitter<TeacherCourseState> emit) async {
     _courseSubscription?.cancel();
 
+    Map<String, String> categoriesMap = {};
+
+    categoriesMap = await _categoryRepository.getCategoriesMap();
+
     User? user = _authRepository.getUser();
     if (user != null) {
       _courseSubscription =
           _courseRepository.getTeacherCourses(user.email!).listen((courses) {
         courses.sort((a, b) => a.compareTo(b));
 
-        add(UpdateTeacherCourses(courses));
+        add(UpdateTeacherCourses(courses, categoriesMap));
       });
     } else {
       print('-----USUARIO NULO------');
@@ -44,7 +48,8 @@ class TeacherCourseBloc extends Bloc<TeacherCourseEvent, TeacherCourseState> {
 
   Future<void> _mapUpdateCoursesToState(
       UpdateTeacherCourses event, Emitter<TeacherCourseState> emit) async {
-    emit(TeacherCourseLoaded(courses: event.courses));
+    emit(TeacherCourseLoaded(
+        courses: event.courses, categories: event.categories));
   }
 
   _createNewTeacherCourse(event, Emitter<TeacherCourseState> emit) {}

@@ -90,8 +90,10 @@ class TothemTheme {
       GoogleFonts.openSans(color: Colors.white, fontSize: 20);
   static TextStyle whiteTitle = GoogleFonts.openSans(
       color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600);
-  static TextStyle whiteSubtitle = GoogleFonts.openSans(
-      color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400);
+  static TextStyle whiteSubtitleOpacity = GoogleFonts.openSans(
+      color: Colors.white.withOpacity(0.8),
+      fontSize: 14,
+      fontWeight: FontWeight.w400);
   static TextStyle bodyText = GoogleFonts.openSans(
       color: Colors.black, fontSize: 18, fontWeight: FontWeight.normal);
   static TextStyle screenTitle = GoogleFonts.openSans(

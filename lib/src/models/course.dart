@@ -122,7 +122,10 @@ class Course extends Equatable {
         "course_id": id,
         "create_date": Timestamp.fromDate(createDate!.toUtc()),
         "description": description,
-        "teacher": teacherName,
+        "teacher": teacher,
+        "teacher_name": teacherName,
+        "teacher_photo": teacherPhoto,
+        "code": code
 
         //"studentList": List<dynamic>.from(students.map((x) => x.toJson())),
       };
@@ -135,6 +138,9 @@ class Course extends Equatable {
 
     Course course = Course(
         title: snap['title'],
+        teacher: snap['teacher'],
+        teacherName: snap['teacher_name'],
+        teacherPhoto: snap['teacher_photo'],
         category: snap['category'],
         id: snap.id,
         description: snap['description'],

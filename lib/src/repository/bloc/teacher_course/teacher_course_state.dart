@@ -16,8 +16,10 @@ class TeacherCourseLoading extends TeacherCourseState {}
 
 class TeacherCourseLoaded extends TeacherCourseState {
   final List<Course> courses;
+  final Map<String, String> categories;
 
-  const TeacherCourseLoaded({this.courses = const <Course>[]});
+  const TeacherCourseLoaded(
+      {this.courses = const <Course>[], this.categories = const {}});
 
   @override
   List<Object?> get props => [courses];
