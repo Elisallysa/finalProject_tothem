@@ -72,11 +72,19 @@ class Task {
     Timestamp due = data['due_date'];
     List<String> attachments = List<String>.from(data['attachments'] ?? []);
 
+    bool done = false;
+
+    try {
+      done = data['done'];
+    } catch (e) {
+      print('No attribute done in Task: $e');
+    }
+
     Task task = Task(
         id: data['id'],
         title: data['title'],
         description: data['description'],
-        done: data['done'],
+        done: done,
         createDate: created.toDate(),
         postDate: posted.toDate(),
         dueDate: due.toDate(),
@@ -94,6 +102,16 @@ class Task {
 
     return task;
   }
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "title": title,
+        "due_date": Timestamp.fromDate(dueDate.toUtc()),
+        "course_id": id,
+        "create_date": Timestamp.fromDate(createDate.toUtc()),
+        "publication_date": Timestamp.fromDate(postDate.toUtc()),
+        "description": description,
+      };
 
   static Task fromSnapshot(DocumentSnapshot snap, String courseRef) {
     Timestamp created = snap['create_date'];

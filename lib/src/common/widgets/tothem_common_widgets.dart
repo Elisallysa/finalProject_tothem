@@ -26,7 +26,7 @@ IconButton getGreenIconButton(BuildContext context, void Function() onPressed,
 
 AppBar standardAppBar(Text title) {
   return AppBar(
-    leading: const Icon(Icons.menu),
+    automaticallyImplyLeading: false,
     title: title,
     shadowColor: TothemTheme.rybGreen,
   );

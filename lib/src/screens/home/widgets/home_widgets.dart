@@ -7,7 +7,6 @@ SliverAppBar customSliverAppBar() {
   return SliverAppBar(
     elevation: 0,
     backgroundColor: Colors.transparent,
-    leading: const Icon(Icons.chevron_left),
     expandedHeight: 80.h,
     floating: true,
     snap: true,

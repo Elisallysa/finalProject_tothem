@@ -39,6 +39,8 @@ class CourseDetailsBloc extends Bloc<CourseDetailsEvent, CourseDetailsState> {
     });
 
     on<CourseInfoLoaded>((event, emit) => _updateCourseToState(event, emit));
+    on<EditContents>((event, emit) => _editContents(event, emit));
+    on<EditTasks>((event, emit) => _editTasks(event, emit));
   }
 
   Future<void> _loadCourseToState(
@@ -81,6 +83,34 @@ class CourseDetailsBloc extends Bloc<CourseDetailsEvent, CourseDetailsState> {
       }
     } else {
       print('-----USUARIO NULO------');
+    }
+  }
+
+  Future<void> _editContents(
+      EditContents event, Emitter<CourseDetailsState> emit) async {
+    try {
+      _courseRepository.editCourseContents(event.courseContents, event.courseId,
+          event.title, event.contentId, event.description);
+
+      add(CourseLoading(Course(id: event.courseId)));
+    } catch (e) {
+      emit(CourseError(
+          course: state.course,
+          contents: state.contents,
+          tasks: state.tasks,
+          error: 'No se ha podido añadir el contenido.',
+          students: state.students));
+    }
+  }
+
+  Future<void> _editTasks(
+      EditTasks event, Emitter<CourseDetailsState> emit) async {
+    try {
+      _taskRepository.editCourseTaskList(
+          event.task, event.contentId, state.course);
+      add(CourseLoading(state.course));
+    } catch (e) {
+      print(e);
     }
   }
 

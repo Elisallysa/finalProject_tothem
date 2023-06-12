@@ -60,14 +60,20 @@ class TaskRepository extends BaseTaskRepository {
 // Verificar si existe el documento
         final taskSnapshot = await taskRef.get();
 
-        final courseData = taskSnapshot.data() as Map<String, dynamic>;
+        if (taskSnapshot.exists) {
+          final courseData = taskSnapshot.data() as Map<String, dynamic>;
 
 // Verificar si el mapa con taskId existe en el documento
-        if (courseData.containsKey(taskId)) {
-          final taskData = courseData[taskId] as Map<String, dynamic>;
-          taskData['done'] = isChecked;
+          if (courseData.containsKey(taskId)) {
+            final taskData = courseData[taskId] as Map<String, dynamic>;
+            taskData['done'] = isChecked;
 
-          await taskRef.update({taskId: taskData});
+            await taskRef.update({taskId: taskData});
+          } else {
+            final newTaskData = {'done': isChecked, "id": taskId};
+
+            await taskRef.set({taskId: newTaskData}, SetOptions(merge: true));
+          }
         } else {
           final newTaskData = {'done': isChecked, "id": taskId};
 
@@ -264,6 +270,75 @@ class TaskRepository extends BaseTaskRepository {
       }
     }
     return userRegCoursesAndTasks;
+  }
+
+  Future<void> editCourseTaskList(
+      Task newTask, String contentId, Course course) async {
+    // If newTask id is empty, that means a new task needs to be written
+    if (newTask.id.isEmpty) {
+      final courseRef = _firebaseFirestore.collection('courses').doc(course.id);
+      final contentRef = courseRef.collection('contents').doc(contentId);
+
+      final contentSnapshot = await contentRef.get();
+
+      if (contentSnapshot.exists) {
+        final contentData = contentSnapshot.data();
+
+        int lastTaskNumber = 0;
+        int contentNumber = 0;
+
+// Get content number
+        RegExp regex = RegExp(r'\d+$');
+        Match? matchContent = regex.firstMatch(contentId);
+
+        if (matchContent != null) {
+          String strContentNumber = matchContent.group(0)!;
+          contentNumber = int.parse(strContentNumber);
+        }
+
+        if (contentData != null && contentData.containsKey('tasks')) {
+          // El documento de la subcolección "contents" tiene un atributo "tasks" que es un mapa
+          List<String> tasksMap = contentData['tasks'];
+          String lastKey = tasksMap.last;
+
+          // Gets last registered course
+
+          Match? match = regex.firstMatch(lastKey);
+
+          // Gets last content task id number
+          if (match != null) {
+            String numberString = match.group(0)!;
+            lastTaskNumber = int.parse(numberString);
+          }
+        } else {
+          String newTaskName = 'c${(contentNumber)}t${(lastTaskNumber + 1)}';
+          Task taskToWrite = newTask.copyWith(id: newTaskName);
+
+          try {
+            await courseRef
+                .collection('tasks')
+                .doc(newTaskName)
+                .set(taskToWrite.toJson())
+                .onError((e, _) => print(
+                    "Error writing task data to \"tasks\" subcollection in course ${course.id} in \"courses\" collection: $e"));
+
+            /*
+            await contentRef.update({
+              FieldPath(const ['tasks']): FieldValue.arrayUnion([newTaskName]),
+            });
+            */
+
+            contentRef.update({
+              "tasks": FieldValue.arrayUnion([newTaskName]),
+            });
+          } catch (e) {
+            print('Error setting task data in "courses" collection: $e');
+          }
+        }
+      } else {
+        // El documento de la subcolección "contents" no existe
+      }
+    }
   }
 }
 

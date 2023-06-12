@@ -43,22 +43,22 @@ class Content {
 
   static Content fromSnapshot(DocumentSnapshot snap) {
     List<Task> tasks = <Task>[];
-    for (var tsk in snap['tasks']) {
-      final task = Task(id: tsk);
-      tasks.add(task);
-    }
 
-    List<String> fileList = <String>[];
-    for (var url in snap['attachments']) {
-      fileList.add(url);
+    try {
+      for (var tsk in snap['tasks']) {
+        final task = Task(id: tsk);
+        tasks.add(task);
+      }
+    } catch (e) {
+      print(e);
     }
 
     Content content = Content(
-        id: snap.id,
-        title: snap['title'],
-        description: snap['description'],
-        tasks: tasks,
-        attachments: fileList);
+      id: snap.id,
+      title: snap['title'],
+      description: snap['description'],
+      tasks: tasks,
+    );
 
     return content;
   }

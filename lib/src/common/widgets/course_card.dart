@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tothem/src/common/theme/tothem_theme.dart';
 import 'package:tothem/src/models/course.dart';
+import 'package:tothem/src/repository/auth_repository/auth_repository.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:tothem/src/screens/course_details/course_details_screen.dart';
 import 'package:tothem/src/screens/tasks_screen/tasks_screen.dart';
 
@@ -23,6 +25,9 @@ class CourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthRepository authRep = AuthRepository();
+    auth.User? _currentUser = authRep.getUser();
+
     return Card(
         margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
         shape: RoundedRectangleBorder(
@@ -90,45 +95,70 @@ class CourseCard extends StatelessWidget {
                     ),
                   ),
                 ]),
-            ButtonBar(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Ink(
-                  decoration: const ShapeDecoration(
-                    color: TothemTheme.brinkPink,
-                    shape: CircleBorder(),
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.remove_red_eye_outlined,
-                        color: Colors.white),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                CourseDetailsScreen(course: course)),
-                      );
-                    },
+                Visibility(
+                  visible: course.teacher == _currentUser!.uid,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 18),
+                    child: Row(
+                      children: [
+                        const Text('Código: ',
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(
+                          course.code.isNotEmpty
+                              ? '#${course.code}'
+                              : '#123456',
+                          style:
+                              TextStyle(color: Colors.black.withOpacity(0.8)),
+                        )
+                      ],
+                    ),
                   ),
                 ),
-                Ink(
-                  decoration: const ShapeDecoration(
-                    color: TothemTheme.brinkPink,
-                    shape: CircleBorder(),
-                  ),
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.checklist,
-                      color: Colors.white,
+                ButtonBar(
+                  children: [
+                    Ink(
+                      decoration: const ShapeDecoration(
+                        color: TothemTheme.brinkPink,
+                        shape: CircleBorder(),
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.remove_red_eye_outlined,
+                            color: Colors.white),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    CourseDetailsScreen(course: course)),
+                          );
+                        },
+                      ),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => TasksScreen(course: course)),
-                      );
-                    },
-                  ),
-                )
+                    Ink(
+                      decoration: const ShapeDecoration(
+                        color: TothemTheme.brinkPink,
+                        shape: CircleBorder(),
+                      ),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.checklist,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    TasksScreen(course: course)),
+                          );
+                        },
+                      ),
+                    )
+                  ],
+                ),
               ],
             ),
           ],

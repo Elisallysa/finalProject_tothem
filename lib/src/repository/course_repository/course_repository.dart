@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:get/get.dart';
+import 'package:tothem/src/models/content.dart';
 import 'package:tothem/src/models/task.dart';
 import 'package:tothem/src/models/user.dart';
 import 'package:tothem/src/repository/course_repository/base_course_repository.dart';
@@ -301,6 +302,51 @@ Map<String, String> categoryCodes = <String, String>{};
         }
       } else {
         throw 'Already joined the course';
+      }
+    }
+  }
+
+  Future<void> editCourseContents(
+      List<Content>? courseContents,
+      String? courseId,
+      String contentTitle,
+      String? contentId,
+      String contentDescription) async {
+    if (courseContents != null) {
+      try {
+        Map<String, dynamic> contentData = {
+          "title": contentTitle,
+          "description": contentDescription
+        };
+
+        int number = 0;
+        // Gets last registered course
+        if (courseContents.isNotEmpty) {
+          String lastId = courseContents.last.id;
+
+          RegExp regex = RegExp(r'\d+$');
+          Match? match = regex.firstMatch(lastId);
+
+          // Gets last reg course id number
+          if (match != null) {
+            String numberString = match.group(0)!;
+            number = int.parse(numberString);
+          }
+        }
+
+        String contentId = 'content${(number + 1)}';
+
+        // Adds registered student in student list
+        await _firebaseFirestore
+            .collection('courses')
+            .doc(courseId)
+            .collection('contents')
+            .doc(contentId)
+            .set(contentData)
+            .onError((e, _) => print(
+                "Error writing content data to \"contents\" subcollection in course $courseId in \"courses\" collection: $e"));
+      } catch (e) {
+        print('Error setting content data in "courses" collection: $e');
       }
     }
   }

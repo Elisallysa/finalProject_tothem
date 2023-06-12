@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,6 +53,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
           return Scaffold(
             bottomNavigationBar: TothemBottomAppBar(key: widget.key),
             appBar: AppBar(
+              automaticallyImplyLeading: false,
               title: Text(state.course.title),
               // This check specifies which nested Scrollable's scroll notification
               // should be listened to.
@@ -88,11 +91,32 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
             body: TabBarView(
               children: <Widget>[
                 ListView.builder(
-                  itemCount: state.contents.length,
+                  itemCount: 1,
                   itemBuilder: (context, index) {
                     if (state.contents.isNotEmpty) {
-                      return _buildList(
-                          context, state.contents[index], state.course.id!);
+                      return Column(
+                        children: [
+                          Visibility(
+                            visible: _isEditable,
+                            child: Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 10, right: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text('Añadir contenido',
+                                        style: TothemTheme.clickableText),
+                                    getGreenIconButton(context, () {
+                                      showNewContentDialog(context,
+                                          state.contents, state.course);
+                                    }, Icons.add, TothemTheme.rybGreen)
+                                  ],
+                                )),
+                          ),
+                          _buildList(context, state.contents[index],
+                              state.course.id!, _isEditable)
+                        ],
+                      );
                     } else {
                       return whiteBackgroundContainer(
                         Column(
@@ -103,6 +127,23 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                             Text('Este curso no tiene contenidos.',
                                 style: TothemTheme.bodyText,
                                 textAlign: TextAlign.center),
+                            Visibility(
+                              visible: _isEditable,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 10),
+                                child: ElevatedButton(
+                                    style: ButtonStyle(
+                                        maximumSize:
+                                            MaterialStateProperty.all<Size>(
+                                                Size(200.w, 50.h))),
+                                    onPressed: () {
+                                      showNewContentDialog(context,
+                                          state.contents, state.course);
+                                    },
+                                    child: Text('Añadir contenido',
+                                        style: TothemTheme.buttonTextW)),
+                              ),
+                            )
                           ],
                         ),
                       );
@@ -138,7 +179,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                             SizedBox(
                                 width: 250.w,
                                 child: Image.asset('assets/images/free.png')),
-                            Text('No tienes tareas asignadas.',
+                            Text(
+                                _isEditable
+                                    ? 'Asocia las tareas a los contenidos de tu curso.'
+                                    : 'No tienes tareas asignadas.',
                                 style: TothemTheme.bodyText,
                                 textAlign: TextAlign.center),
                           ],
@@ -148,7 +192,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                   },
                 ),
                 ListView.builder(
-                  itemCount: state.students.length,
+                  itemCount: 1,
                   itemBuilder: (BuildContext context, int index) {
                     if (state.students.isNotEmpty) {
                       return ListTile(
@@ -208,12 +252,13 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   }
 }
 
-Widget _buildList(BuildContext context, Content content, String courseId) {
+Widget _buildList(
+    BuildContext context, Content content, String courseId, bool isEditable) {
   return ExpansionTile(
     title: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
       IconButton(
           onPressed: () {
-            showEditContentDialog(context);
+            showEditContentDialog(context, content, courseId);
           },
           icon: const Icon(Tothem.edit)),
       Text(content.title, style: TothemTheme.tileTitle)
@@ -224,6 +269,19 @@ Widget _buildList(BuildContext context, Content content, String courseId) {
         alignment: Alignment.centerLeft,
         child: Text(content.description, style: TothemTheme.tileDescription),
       ),
+      Visibility(
+          visible: isEditable,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: ElevatedButton(
+                onPressed: () {
+                  showNewTaskDialog(context, courseId, content.id);
+                },
+                style: ButtonStyle(
+                    maximumSize:
+                        MaterialStateProperty.all<Size>(Size(200.w, 50.h))),
+                child: Text('Añadir tarea', style: TothemTheme.buttonTextW)),
+          )),
       if (content.tasks.isNotEmpty)
         Column(
           children: content.tasks.map((task) {

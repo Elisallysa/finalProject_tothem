@@ -43,3 +43,29 @@ class CheckboxChangedEvent extends CourseDetailsEvent {
   @override
   List<Object?> get props => [courseId, taskId, isChecked];
 }
+
+class EditContents extends CourseDetailsEvent {
+  final String? contentId;
+  final List<Content>? courseContents;
+  final String courseId;
+  final String title;
+  final String description;
+
+  const EditContents(
+    this.contentId,
+    this.courseContents, {
+    required this.courseId,
+    required this.title,
+    required this.description,
+  });
+}
+
+class EditTasks extends CourseDetailsEvent {
+  final Task task;
+  final String contentId;
+
+  const EditTasks({
+    required this.task,
+    required this.contentId,
+  });
+}

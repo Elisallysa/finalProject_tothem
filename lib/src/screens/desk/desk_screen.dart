@@ -167,17 +167,18 @@ showAddCourseDialog(BuildContext context, List<CourseCategory> categoriesList,
                   context
                       .read<DeskBloc>()
                       .add(CreateCourseEvent(newCourse, authUser));
-                  bool titititi = context.read<DeskBloc>().state.course == null;
-                  print('amo a ve si e null o no e null: $titititi');
 
-                  /*             // Navega a la pantalla de detalles del curso y pasa el curso seleccionado
-Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => CourseDetailsScreen(course: context
-                      .read<DeskBloc>().state.course),
-  ),
-);*/
+/*
+NO DA TIEMPO A QUE SE CARGUE EL NUEVO CURSO EN EL ESTADO
+                  // Navega a la pantalla de detalles del curso y pasa el curso seleccionado
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CourseDetailsScreen(
+                          course: context.read<DeskBloc>().state.course),
+                    ),
+                  );
+                  */
                 } catch (e) {
                   print(e);
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -190,6 +191,7 @@ Navigator.push(
                   const SnackBar(content: Text('Curso añadido')),
                 );
                 Navigator.pop(context, 'Crear');
+                // Navega a la pantalla de detalles del curso y pasa el curso seleccionado
               }
             },
           ),

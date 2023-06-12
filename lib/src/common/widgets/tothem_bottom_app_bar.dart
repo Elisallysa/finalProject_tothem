@@ -52,6 +52,7 @@ class TothemBottomAppBar extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => TasksScreen()));
               },
             ),
+            /*
             IconButton(
               icon: Icon(Tothem.calendar, color: iconColor),
               onPressed: () {},
@@ -63,7 +64,7 @@ class TothemBottomAppBar extends StatelessWidget {
               ),
               color: iconColor,
               onPressed: () {},
-            ),
+            ),*/
           ],
         ),
       ),

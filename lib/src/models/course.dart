@@ -136,8 +136,16 @@ class Course extends Equatable {
   static Course fromSnapshot(DocumentSnapshot snap) {
     Timestamp createDate = snap['create_date'];
 
+    String courseCode = '';
+    try {
+      courseCode = snap['code'];
+    } catch (e) {
+      print('No course code in Firestore.');
+    }
+
     Course course = Course(
         title: snap['title'],
+        code: courseCode,
         teacher: snap['teacher'],
         teacherName: snap['teacher_name'],
         teacherPhoto: snap['teacher_photo'],
