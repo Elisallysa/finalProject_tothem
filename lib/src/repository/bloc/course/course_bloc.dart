@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tothem/src/models/course.dart';
 import 'package:tothem/src/repository/auth_repository/auth_repository.dart';
+import 'package:tothem/src/repository/bloc/bloc.dart';
 
 import '../../course_repository/course_repository.dart';
 import 'course_events.dart';
@@ -12,13 +13,16 @@ import 'course_state.dart';
 class CourseBloc extends Bloc<CourseEvent, CourseState> {
   final CourseRepository _courseRepository;
   StreamSubscription? _courseSubscription;
+  final CategoryRepository _categoryRepository;
   final AuthRepository _authRepository;
 
   CourseBloc(
       {required AuthRepository authRepository,
-      required CourseRepository courseRepository})
+      required CourseRepository courseRepository,
+      required CategoryRepository categoryRepository})
       : _authRepository = authRepository,
         _courseRepository = courseRepository,
+        _categoryRepository = categoryRepository,
         super(CourseLoading()) {
     on<LoadCourses>((event, emit) async {
       await _mapLoadCoursesToState(emit);
@@ -33,12 +37,14 @@ class CourseBloc extends Bloc<CourseEvent, CourseState> {
   Future<void> _mapLoadCoursesToState(Emitter<CourseState> emit) async {
     _courseSubscription?.cancel();
 
+    Map<String, String> catMap = await _categoryRepository.getCategoriesMap();
+
     User? user = _authRepository.getUser();
     if (user != null) {
       _courseSubscription = _courseRepository
           .getRegCourses(user.uid)
           .asStream()
-          .listen((courses) => add(UpdateCourses(courses)));
+          .listen((courses) => add(UpdateCourses(courses, catMap)));
     } else {
       print('-----USUARIO NULO------');
     }
@@ -46,26 +52,22 @@ class CourseBloc extends Bloc<CourseEvent, CourseState> {
 
   Future<void> _mapUpdateCoursesToState(
       UpdateCourses event, Emitter<CourseState> emit) async {
-    emit(CourseLoaded(courses: event.courses));
+    emit(CourseLoaded(event.categoriesMap, courses: event.courses));
   }
 
   Future<void> _joinCourse(JoinCourse event) async {
-    List<Course> alreadyRegCourses = [];
+    Map<String, String> catMap = await _categoryRepository.getCategoriesMap();
 
     User? user = _authRepository.getUser();
     if (user != null) {
-      _courseRepository
-          .getRegCourses(user.uid)
-          .asStream()
-          .listen((courses) => alreadyRegCourses.addAll(courses));
+      List<Course> regCourses =
+          await _courseRepository.getRegCourses(event.user.uid);
 
-      try {
-        _courseRepository.joinCourse(
-            event.courseCode, alreadyRegCourses, event.user);
-        add(LoadCourses());
-      } catch (e) {
-        throw 'Could not join the course: $e';
-      }
+      await _courseRepository.joinCourse(
+          event.courseCode, regCourses, event.user);
+      List<Course> updatedRegCourses =
+          await _courseRepository.getRegCourses(event.user.uid);
+      add(UpdateCourses(updatedRegCourses, catMap));
     }
   }
 }

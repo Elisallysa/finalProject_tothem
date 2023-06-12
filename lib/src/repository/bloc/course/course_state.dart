@@ -17,8 +17,9 @@ class CourseLoading extends CourseState {}
 
 class CourseLoaded extends CourseState {
   final List<Course> courses;
+  final Map<String, String>? categoriesMap;
 
-  const CourseLoaded({this.courses = const <Course>[]});
+  const CourseLoaded(this.categoriesMap, {this.courses = const <Course>[]});
 
   @override
   List<Object?> get props => [courses];

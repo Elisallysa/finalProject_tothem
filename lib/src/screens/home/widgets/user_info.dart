@@ -43,6 +43,7 @@ class UserInfoContainer extends StatelessWidget {
                   '$userName $userLastname',
                   style: TothemTheme.title,
                 ),
+                /*
                 const SizedBox(
                   width: 30,
                   child: Icon(
@@ -50,6 +51,7 @@ class UserInfoContainer extends StatelessWidget {
                     color: TothemTheme.brinkPink,
                   ),
                 ),
+                */
               ],
             ),
             Text(
@@ -61,9 +63,9 @@ class UserInfoContainer extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  infoCard('Edad', '24', 1),
-                  infoCard('Centro / empresa', 'IES Pablo Picasso', 2),
-                  infoCard('Localidad', 'Málaga', 1),
+                  infoCard('Edad', '-', 1),
+                  infoCard('Centro / empresa', '-', 2),
+                  infoCard('Localidad', '-', 1),
                 ],
               ),
             )

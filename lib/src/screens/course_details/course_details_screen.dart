@@ -39,10 +39,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     bool _isEditable = false;
+    bool _isStudent = true;
 
     if ((widget._course.teacher.isNotEmpty && widget._authUser != null) &&
         (widget._course.teacher == widget._authUser!.uid)) {
       _isEditable = true;
+      _isStudent = false;
     }
 
     return DefaultTabController(
@@ -114,7 +116,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                 )),
                           ),
                           _buildList(context, state.contents[index],
-                              state.course.id!, _isEditable)
+                              state.course.id!, _isEditable, _isStudent)
                         ],
                       );
                     } else {
@@ -157,19 +159,21 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                       return Column(
                           children: state.tasks.map((task) {
                         return TaskCard(
-                            checkboxFunction: (bool value, context) {
-                              context.read<CourseDetailsBloc>().add(
-                                    CheckboxChangedEvent(
-                                      courseId: state.course.id!,
-                                      taskId: task.id,
-                                      isChecked: value,
-                                    ),
-                                  );
-                            },
-                            task: task,
-                            isChecked: task.done,
-                            courseId: state.course.id!,
-                            clickedOnTasksScreen: false);
+                          checkboxFunction: (bool value, context) {
+                            context.read<CourseDetailsBloc>().add(
+                                  CheckboxChangedEvent(
+                                    courseId: state.course.id!,
+                                    taskId: task.id,
+                                    isChecked: value,
+                                  ),
+                                );
+                          },
+                          task: task,
+                          isChecked: task.done,
+                          courseId: state.course.id!,
+                          clickedOnTasksScreen: false,
+                          isStudent: _isStudent,
+                        );
                       }).toList());
                     } else {
                       return Padding(
@@ -252,15 +256,18 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   }
 }
 
-Widget _buildList(
-    BuildContext context, Content content, String courseId, bool isEditable) {
+Widget _buildList(BuildContext context, Content content, String courseId,
+    bool isEditable, bool isStudent) {
   return ExpansionTile(
     title: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-      IconButton(
-          onPressed: () {
-            showEditContentDialog(context, content, courseId);
-          },
-          icon: const Icon(Tothem.edit)),
+      Visibility(
+        visible: isEditable,
+        child: IconButton(
+            onPressed: () {
+              showEditContentDialog(context, content, courseId);
+            },
+            icon: const Icon(Tothem.edit)),
+      ),
       Text(content.title, style: TothemTheme.tileTitle)
     ]),
     children: [
@@ -293,7 +300,8 @@ Widget _buildList(
                 task: task,
                 isChecked: task.done,
                 courseId: courseId,
-                clickedOnTasksScreen: false);
+                clickedOnTasksScreen: false,
+                isStudent: isStudent);
           }).toList(),
         )
     ],

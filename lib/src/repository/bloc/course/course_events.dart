@@ -11,11 +11,12 @@ class LoadCourses extends CourseEvent {}
 
 class UpdateCourses extends CourseEvent {
   final List<Course> courses;
+  final Map<String, String> categoriesMap;
 
-  UpdateCourses(this.courses);
+  UpdateCourses(this.courses, this.categoriesMap);
 
   @override
-  List<Object?> get props => [courses];
+  List<Object?> get props => [courses, categoriesMap];
 }
 
 class JoinCourse extends CourseEvent {

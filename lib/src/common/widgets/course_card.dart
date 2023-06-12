@@ -65,8 +65,6 @@ class CourseCard extends StatelessWidget {
                           style: TothemTheme.whiteSubtitleOpacity),
                     ],
                   ),
-                  trailing:
-                      const Icon(Icons.more_vert_rounded, color: Colors.white),
                   minLeadingWidth: 15,
                   minVerticalPadding: 15,
                 ),

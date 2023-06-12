@@ -247,12 +247,15 @@ Map<String, String> categoryCodes = <String, String>{};
           await _firebaseFirestore.collection('courses').doc(courseId).get();
 
       Course course = Course.fromCourseSnapshot(courseDocSnap);
-      Course newCourse = course.copyWith(registerDate: DateTime.now());
+      Course newCourse = course.copyWith(
+          registerDate: DateTime.now(), teacherPhoto: user.photoURL);
 
       int number = 0;
+
       // Gets last registered course
       if (regCourses.isNotEmpty) {
-        String lastId = regCourses.last.id!;
+        number = regCourses.length;
+        /*   String lastId = regCourses.last.id!;
 
         RegExp regex = RegExp(r'\d+$');
         Match? match = regex.firstMatch(lastId);
@@ -260,18 +263,19 @@ Map<String, String> categoryCodes = <String, String>{};
         // Gets last reg course id number
         if (match != null) {
           String numberString = match.group(0)!;
-          number = int.parse(numberString);
-        }
+          number = int.parse(numberString); }
+       */
       }
 
-      String newCourseName = 'course${(number + 1)}';
+      String newCourseName = 'course${(regCourses.length + 1)}';
 
       if (regCourses.firstWhereOrNull((element) => element.id == course.id) ==
           null) {
         try {
           // Adds new Course to list of registered courses in collection "reg_courses"
-          final documentReference =
-              _firebaseFirestore.collection('reg_courses').doc(user.uid);
+          final documentReference = _firebaseFirestore
+              .collection('registered_courses')
+              .doc('${user.uid}_reg_courses');
           await documentReference
               .update({newCourseName: newCourse.toRegCourseJson()});
 
@@ -334,19 +338,37 @@ Map<String, String> categoryCodes = <String, String>{};
           }
         }
 
-        String contentId = 'content${(number + 1)}';
+        String newContentId = 'content${(number + 1)}';
 
         // Adds registered student in student list
         await _firebaseFirestore
             .collection('courses')
             .doc(courseId)
             .collection('contents')
-            .doc(contentId)
+            .doc(newContentId)
             .set(contentData)
             .onError((e, _) => print(
                 "Error writing content data to \"contents\" subcollection in course $courseId in \"courses\" collection: $e"));
       } catch (e) {
         print('Error setting content data in "courses" collection: $e');
+      }
+    } else if (contentId != null) {
+      Map<String, dynamic> contentData = {
+        "title": contentTitle,
+        "description": contentDescription
+      };
+
+      try {
+        await _firebaseFirestore
+            .collection('courses')
+            .doc(courseId)
+            .collection('contents')
+            .doc(contentId)
+            .update(contentData)
+            .onError((e, _) => print(
+                "Error updating content data to \"contents\" subcollection in course $courseId in \"courses\" collection: $e"));
+      } catch (e) {
+        print(e);
       }
     }
   }

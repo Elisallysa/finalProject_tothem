@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:tothem/src/common/widgets/message_snackbar.dart';
 import 'package:tothem/src/repository/bloc/bloc.dart';
 import 'package:tothem/src/screens/home/home.dart';
@@ -12,6 +13,18 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, String> categoriesMap = {
+      'AE': 'Educación Alternativa',
+      'AS': 'Estudios Artísticos',
+      'LL': 'Idiomas',
+      'PE': 'Educación Física',
+      'SS': 'Asignatura Escolar',
+      'SD': 'Desarrollo personal',
+      'TR': 'Formación de empresa',
+      'US': 'Asignatura Universitaria',
+      'VE': 'Formación Profesional'
+    };
+
     return Scaffold(
         bottomNavigationBar: const TothemBottomAppBar(),
         backgroundColor: TothemTheme.rybGreen,
@@ -78,8 +91,11 @@ class HomeScreen extends StatelessWidget {
                       return SliverList(
                         delegate: SliverChildListDelegate(
                           state.courses.map((course) {
-                            return whiteBackgroundContainer(
-                                CourseCard(key: key, course: course));
+                            return whiteBackgroundContainer(CourseCard(
+                                key: key,
+                                category: categoriesMap[course.category] ??
+                                    course.category,
+                                course: course));
                           }).toList(),
                         ),
                       );
@@ -179,7 +195,6 @@ void _showJoinCourseDialog(BuildContext context, auth.User user) {
                       try {
                         joinCourse(codeController.text);
                       } catch (e) {
-                        print(e);
                         if (e.toString().contains("Already")) {
                           showAlertSnackbar(
                               'Ya estás registrado en este curso.', 'OK', null);
@@ -203,7 +218,7 @@ void _showJoinCourseDialog(BuildContext context, auth.User user) {
                     print(e);
                   }
                 } else {}
-                // Navigator.pop(context, 'Unirse');
+                Navigator.pop(context, 'Unirse');
               },
               child: const Text('Unirse'),
             ),

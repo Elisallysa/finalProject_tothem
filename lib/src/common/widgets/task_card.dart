@@ -21,6 +21,7 @@ class TaskCard extends StatelessWidget {
   final bool isChecked;
   final Function checkboxFunction;
   final bool clickedOnTasksScreen;
+  final bool isStudent;
 
   const TaskCard(
       {Key? key,
@@ -28,7 +29,8 @@ class TaskCard extends StatelessWidget {
       required this.task,
       required this.isChecked,
       required this.checkboxFunction,
-      required this.clickedOnTasksScreen})
+      required this.clickedOnTasksScreen,
+      required this.isStudent})
       : super(key: key);
 
   @override
@@ -63,31 +65,35 @@ class TaskCard extends StatelessWidget {
                 width: 50.w,
                 fit: BoxFit.scaleDown,
               ),
-              trailing: Checkbox(
-                  checkColor: Colors.white,
-                  fillColor: MaterialStateProperty.resolveWith(getColor),
-                  value: isChecked,
-                  onChanged: (bool? value) {
-                    if (clickedOnTasksScreen) {
-                      final taskEvent = tScEv.CheckboxChangedEvent(
-                          courseId: courseId,
-                          isChecked: value ?? false,
-                          taskId: task.id);
-                      BlocProvider.of<tScBl.TasksScreenBloc>(context)
-                          .add(taskEvent);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => TasksScreen()),
-                      );
-                    } else {
-                      final courseDeetsEvent = cDeetsEv.CheckboxChangedEvent(
-                          courseId: courseId,
-                          isChecked: value ?? false,
-                          taskId: task.id);
-                      BlocProvider.of<cDeetsBl.CourseDetailsBloc>(context)
-                          .add(courseDeetsEvent);
-                    }
-                  }),
+              trailing: Visibility(
+                visible: isStudent,
+                child: Checkbox(
+                    checkColor: Colors.white,
+                    fillColor: MaterialStateProperty.resolveWith(getColor),
+                    value: isChecked,
+                    onChanged: (bool? value) {
+                      if (clickedOnTasksScreen) {
+                        final taskEvent = tScEv.CheckboxChangedEvent(
+                            courseId: courseId,
+                            isChecked: value ?? false,
+                            taskId: task.id);
+                        BlocProvider.of<tScBl.TasksScreenBloc>(context)
+                            .add(taskEvent);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TasksScreen()),
+                        );
+                      } else {
+                        final courseDeetsEvent = cDeetsEv.CheckboxChangedEvent(
+                            courseId: courseId,
+                            isChecked: value ?? false,
+                            taskId: task.id);
+                        BlocProvider.of<cDeetsBl.CourseDetailsBloc>(context)
+                            .add(courseDeetsEvent);
+                      }
+                    }),
+              ),
               title: Text(task.title, style: TothemTheme.tileTitle),
               subtitle:
                   Text(task.description, style: TothemTheme.tileDescription),

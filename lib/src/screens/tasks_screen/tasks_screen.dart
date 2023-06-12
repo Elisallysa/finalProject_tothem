@@ -22,6 +22,7 @@ class TasksScreen extends StatefulWidget {
     Course? course,
     auth.User? authUser,
   })  : _authUser = authUser ?? auth.FirebaseAuth.instance.currentUser,
+        _course = course,
         super(key: key);
 
   @override
@@ -151,7 +152,8 @@ ListView courseTasksListView(
                 task: task,
                 isChecked: task.done,
                 courseId: course.id!,
-                clickedOnTasksScreen: true);
+                clickedOnTasksScreen: true,
+                isStudent: true);
           }).toList());
         } else {
           String message = '';
@@ -217,7 +219,8 @@ ListView tasksListView(List<Course> courseList, bool? doneNotDone) {
                 task: task,
                 isChecked: task.done,
                 courseId: task.courseRef,
-                clickedOnTasksScreen: true);
+                clickedOnTasksScreen: true,
+                isStudent: true);
           }).toList());
         } else {
           String message = '';

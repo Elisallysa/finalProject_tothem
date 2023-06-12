@@ -16,10 +16,10 @@ import 'package:tothem/src/screens/desk/bloc/desk_bloc.dart';
 import 'package:tothem/src/screens/desk/bloc/desk_event.dart';
 
 showEditContentDialog(BuildContext context, Content content, String courseId) {
-  final titleController = TextEditingController();
-  final descriptionController = TextEditingController();
+  final titleController = TextEditingController(text: content.title);
+  final descriptionController =
+      TextEditingController(text: content.description);
   final formKey = GlobalKey<FormState>();
-  String selectedCategory = '';
 
   showDialog(
     context: context,
@@ -35,7 +35,6 @@ showEditContentDialog(BuildContext context, Content content, String courseId) {
               child: Column(
                 children: [
                   TextFormField(
-                    initialValue: content.title,
                     controller: titleController,
                     validator: (value) {
                       return value!.isNotEmpty ? null : "Introduce un título.";
@@ -45,7 +44,6 @@ showEditContentDialog(BuildContext context, Content content, String courseId) {
                         labelStyle: TothemTheme.dialogFields),
                   ),
                   TextFormField(
-                    initialValue: content.description,
                     maxLines: null,
                     keyboardType: TextInputType.multiline,
                     controller: descriptionController,
@@ -78,6 +76,12 @@ showEditContentDialog(BuildContext context, Content content, String courseId) {
                       courseId: courseId,
                       description: descriptionController.text,
                       title: titleController.text));
+
+                  Navigator.pop(context);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Contenido editado.')),
+                  );
                 } catch (e) {
                   print(e);
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -85,10 +89,6 @@ showEditContentDialog(BuildContext context, Content content, String courseId) {
                         content: Text('No se ha podido añadir el contenido.')),
                   );
                 }
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Contenido añadido.')),
-                );
               } else {
                 Navigator.pop(context);
               }

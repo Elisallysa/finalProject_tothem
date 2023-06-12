@@ -71,6 +71,7 @@ class TothemApp extends StatelessWidget {
           BlocProvider(
               create: (context) => CourseBloc(
                   authRepository: context.read<AuthRepository>(),
+                  categoryRepository: context.read<CategoryRepository>(),
                   courseRepository: context.read<CourseRepository>())
                 ..add(LoadCourses())),
           BlocProvider(
