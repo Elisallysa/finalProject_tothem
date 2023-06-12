@@ -60,7 +60,7 @@ class TasksScreenBloc extends Bloc<TasksScreenEvent, TasksScreenState> {
 
             add(CourseInfoLoaded(loadedCourse, courseContents, courseTasks));
           } else {
-            emit(const CourseError(
+            emit(const CourseError(<Course>[],
                 course: Course(),
                 contents: <Content>[],
                 tasks: <Task>[],
@@ -70,11 +70,11 @@ class TasksScreenBloc extends Bloc<TasksScreenEvent, TasksScreenState> {
         } else {
           List<Course> userCoursesAndTasks =
               await _taskRepository.getAllUserRegCourses();
-
+          state.coursesAndTasks.clear;
           add(AllStudentTasksLoaded(userCoursesAndTasks));
         }
       } catch (error) {
-        emit(CourseError(
+        emit(CourseError(const <Course>[],
             course: const Course(),
             contents: const <Content>[],
             tasks: const <Task>[],
@@ -124,16 +124,65 @@ class TasksScreenBloc extends Bloc<TasksScreenEvent, TasksScreenState> {
         event.isChecked,
       );
 
-      List<Task> updatedTasks = state.tasks;
+      if (state is CourseLoaded) {
+        List<Task> updatedTasksList = [];
+        updatedTasksList.addAll(state.tasks);
+        if (updatedTask != null) {
+          updatedTasksList
+              .removeWhere((element) => element.id == updatedTask.id);
+          updatedTasksList.add(updatedTask);
+        }
+
+        emit(CourseLoaded(
+            course: state.course,
+            contents: updatedContents,
+            tasks: updatedTasksList));
+      } else if (state is AllTasksLoaded) {
+        List<Course> updatedUserCoursesAndTasks =
+            await _taskRepository.getAllUserRegCourses();
+        state.coursesAndTasks.clear;
+        emit(state.reset());
+        add(AllStudentTasksLoaded(updatedUserCoursesAndTasks));
+      }
+
+/*
+      List<Task> updatedTasks = [];
+      updatedTasks.addAll(state.tasks);
       if (updatedTask != null) {
         updatedTasks.removeWhere((element) => element.id == updatedTask.id);
         updatedTasks.add(updatedTask);
       }
 
-      emit(CourseLoaded(
-          course: state.course,
-          contents: updatedContents,
-          tasks: updatedTasks));
+      if (state is CourseLoaded) {
+        emit(CourseLoaded(
+            course: state.course,
+            contents: updatedContents,
+            tasks: updatedTasks));
+      } else {
+        List<Course> updatedCoursesAndTasks = [];
+        updatedCoursesAndTasks.addAll(state.coursesAndTasks);
+
+        Course courseToBeUpdated = updatedCoursesAndTasks
+            .firstWhere((element) => element.id == updatedTask!.courseRef);
+
+        Task taskToReplace = courseToBeUpdated.tasks
+            .firstWhere((tsk) => tsk.id == updatedTask!.id);
+        Task newTask = taskToReplace.copyWith(done: updatedTask!.done);
+        courseToBeUpdated.tasks.remove(taskToReplace);
+        courseToBeUpdated.tasks.add(newTask);
+
+        List<Task> updatedTasks = [];
+        updatedTasks.addAll(courseToBeUpdated.tasks);
+
+        Course updatedCourse = courseToBeUpdated.copyWith(tasks: updatedTasks);
+
+        updatedCoursesAndTasks.remove(courseToBeUpdated);
+        updatedCoursesAndTasks.add(updatedCourse);
+
+        emit(AllTasksLoaded(coursesAndTasks: updatedCoursesAndTasks));
+        
+         }
+        */
     } catch (error) {
       print('Error checking task done.');
       emit(CourseLoaded(

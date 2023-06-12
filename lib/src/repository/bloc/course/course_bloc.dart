@@ -61,7 +61,7 @@ class CourseBloc extends Bloc<CourseEvent, CourseState> {
 
       try {
         _courseRepository.joinCourse(
-            event.courseCode, alreadyRegCourses, event.user.uid);
+            event.courseCode, alreadyRegCourses, event.user);
         add(LoadCourses());
       } catch (e) {
         throw 'Could not join the course: $e';

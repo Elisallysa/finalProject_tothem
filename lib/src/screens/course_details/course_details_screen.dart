@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tothem/src/common/assets/tothem_icons.dart';
+import 'package:tothem/src/common/widgets/task_card.dart';
 import 'package:tothem/src/models/content.dart';
 import 'package:tothem/src/models/course.dart';
 import 'package:tothem/src/screens/course_details/widgets/new_content_dialog.dart';
-import 'package:tothem/src/screens/course_details/widgets/task_card.dart';
 import 'package:tothem/src/screens/desk/desk.dart';
 import 'package:tothem/src/screens/course_details/bloc/course_details_state.dart';
 
@@ -116,19 +116,19 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                       return Column(
                           children: state.tasks.map((task) {
                         return TaskCard(
-                          checkboxFunction: (bool value, context) {
-                            context.read<CourseDetailsBloc>().add(
-                                  CheckboxChangedEvent(
-                                    courseId: state.course.id!,
-                                    taskId: task.id,
-                                    isChecked: value,
-                                  ),
-                                );
-                          },
-                          task: task,
-                          isChecked: task.done,
-                          courseId: state.course.id!,
-                        );
+                            checkboxFunction: (bool value, context) {
+                              context.read<CourseDetailsBloc>().add(
+                                    CheckboxChangedEvent(
+                                      courseId: state.course.id!,
+                                      taskId: task.id,
+                                      isChecked: value,
+                                    ),
+                                  );
+                            },
+                            task: task,
+                            isChecked: task.done,
+                            courseId: state.course.id!,
+                            clickedOnTasksScreen: false);
                       }).toList());
                     } else {
                       return Padding(
@@ -228,14 +228,14 @@ Widget _buildList(BuildContext context, Content content, String courseId) {
         Column(
           children: content.tasks.map((task) {
             return TaskCard(
-              checkboxFunction: (bool value, context) {
-                context.read<CourseDetailsBloc>().add(CheckboxChangedEvent(
-                    courseId: courseId, taskId: task.id, isChecked: value));
-              },
-              task: task,
-              isChecked: task.done,
-              courseId: courseId,
-            );
+                checkboxFunction: (bool value, context) {
+                  context.read<CourseDetailsBloc>().add(CheckboxChangedEvent(
+                      courseId: courseId, taskId: task.id, isChecked: value));
+                },
+                task: task,
+                isChecked: task.done,
+                courseId: courseId,
+                clickedOnTasksScreen: false);
           }).toList(),
         )
     ],

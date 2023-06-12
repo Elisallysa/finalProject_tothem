@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:tothem/src/models/task.dart';
 import 'package:tothem/src/models/user.dart';
 import 'package:tothem/src/repository/course_repository/base_course_repository.dart';
+import 'package:tothem/src/repository/task_repository/task_repository.dart';
 import '../../models/course.dart';
 
 class CourseRepository extends BaseCourseRepository {
@@ -232,7 +233,7 @@ Map<String, String> categoryCodes = <String, String>{};
   }
 
   Future<void> joinCourse(
-      String courseCode, List<Course> regCourses, String userUid) async {
+      String courseCode, List<Course> regCourses, auth.User user) async {
     DocumentSnapshot<Map<String, dynamic>> doc = await _firebaseFirestore
         .collection('course_codes')
         .doc(courseCode)
@@ -248,13 +249,14 @@ Map<String, String> categoryCodes = <String, String>{};
       Course newCourse = course.copyWith(registerDate: DateTime.now());
 
       int number = 0;
-      // Get last registered course
+      // Gets last registered course
       if (regCourses.isNotEmpty) {
         String lastId = regCourses.last.id!;
 
         RegExp regex = RegExp(r'\d+$');
         Match? match = regex.firstMatch(lastId);
 
+        // Gets last reg course id number
         if (match != null) {
           String numberString = match.group(0)!;
           number = int.parse(numberString);
@@ -266,10 +268,34 @@ Map<String, String> categoryCodes = <String, String>{};
       if (regCourses.firstWhereOrNull((element) => element.id == course.id) ==
           null) {
         try {
+          // Adds new Course to list of registered courses in collection "reg_courses"
           final documentReference =
-              FirebaseFirestore.instance.collection('reg_courses').doc(userUid);
+              _firebaseFirestore.collection('reg_courses').doc(user.uid);
           await documentReference
               .update({newCourseName: newCourse.toRegCourseJson()});
+
+          Map<String, dynamic> basicStudentInfo = {
+            "email": user.email,
+            "name": user.displayName ??
+                user.email!.substring(0, user.email!.indexOf('@'))
+          };
+
+          TaskRepository taskRep = TaskRepository();
+          List<Task> courseTasks = await taskRep.getCourseTasks(courseId);
+          final QuerySnapshot<Map<String, dynamic>> tasksQuery =
+              await _firebaseFirestore
+                  .collection('courses/$courseId/tasks')
+                  .get();
+
+          // Adds registered student in student list
+          await _firebaseFirestore
+              .collection('courses')
+              .doc(courseId)
+              .collection('students')
+              .doc(user.uid)
+              .set(basicStudentInfo)
+              .onError((e, _) => print(
+                  "Error writing student data to \"students\" subcollection in course $courseId in \"courses\" collection: $e"));
         } catch (e) {
           print('Error al añadir el curso a registered_courses: $e');
         }

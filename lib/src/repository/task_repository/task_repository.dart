@@ -26,7 +26,7 @@ class TaskRepository extends BaseTaskRepository {
         .get();
 
     if (snapshot.exists) {
-      final Task task = Task.fromSnapshot(snapshot);
+      final Task task = Task.fromSnapshot(snapshot, courseId);
       return task;
     }
     return null;
@@ -38,7 +38,7 @@ class TaskRepository extends BaseTaskRepository {
         await _firebaseFirestore.collection('courses/$courseId/tasks').get();
 
     final courseTasks =
-        tasksQuery.docs.map((tsk) => Task.fromSnapshot(tsk)).toList();
+        tasksQuery.docs.map((tsk) => Task.fromSnapshot(tsk, courseId)).toList();
 
     return courseTasks;
   }
@@ -48,22 +48,54 @@ class TaskRepository extends BaseTaskRepository {
     String taskId,
     bool isChecked,
   ) async {
+    auth.User? currentUser = _authRepository.getUser();
+
     try {
-      // Obtener la referencia al documento del task en Firestore
-      final taskRef =
-          _firebaseFirestore.collection('courses/$courseId/tasks').doc(taskId);
+      if (currentUser != null) {
+        // Obtener la referencia al documento del task en Firestore
+        final taskRef = _firebaseFirestore
+            .collection(
+                'registered_courses/${currentUser.uid}_reg_courses/tasks')
+            .doc(courseId);
+// Verificar si existe el documento
+        final taskSnapshot = await taskRef.get();
 
-      // Actualizar el campo "done" del documento del task
-      await taskRef.update({
-        'done': isChecked,
-      });
+        final courseData = taskSnapshot.data() as Map<String, dynamic>;
 
-      // Obtener el task actualizado desde Firestore
-      final taskSnapshot = await taskRef.get();
-      final taskData = taskSnapshot.data() as Map<String, dynamic>;
+// Verificar si el mapa con taskId existe en el documento
+        if (courseData.containsKey(taskId)) {
+          final taskData = courseData[taskId] as Map<String, dynamic>;
+          taskData['done'] = isChecked;
 
-      // Construir y devolver el objeto Task actualizado
-      return Task.fromMap(taskData);
+          await taskRef.update({taskId: taskData});
+        } else {
+          final newTaskData = {'done': isChecked, "id": taskId};
+
+          await taskRef.set({taskId: newTaskData}, SetOptions(merge: true));
+        }
+
+/*
+        
+        if (taskSnapshot.exists) {
+          // Actualizar el campo "done" del documento existente
+          await taskRef.update({
+            'done': isChecked,
+          });
+        } else {
+          // Crear un nuevo documento con el estado de la tarea
+          await taskRef.set({'done': isChecked, 'id': taskId});
+        }
+*/
+
+        // Obtener el task actualizado desde Firestore
+        final updatedTaskSnapshot = await taskRef.get();
+        final uTaskData = updatedTaskSnapshot.data() as Map<String, dynamic>;
+
+        // Construir y devolver el objeto Task actualizado
+        return Task.fromSimpleMap(uTaskData[taskId]);
+      } else {
+        throw 'User is not logged in. Log in again.';
+      }
     } catch (error) {
       print('Task status could not be updated.');
       return null;
@@ -113,8 +145,9 @@ class TaskRepository extends BaseTaskRepository {
                   .collection('courses/${course.id}/tasks')
                   .get();
 
-          final courseTasks =
-              tasksQuery.docs.map((task) => Task.fromSnapshot(task)).toList();
+          final courseTasks = tasksQuery.docs
+              .map((task) => Task.fromSnapshot(task, course.id!))
+              .toList();
 
           List<Task> regTasksStatus = [];
 
@@ -187,8 +220,9 @@ class TaskRepository extends BaseTaskRepository {
                   .collection('courses/${course.id}/tasks')
                   .get();
 
-          final courseTasks =
-              tasksQuery.docs.map((task) => Task.fromSnapshot(task)).toList();
+          final courseTasks = tasksQuery.docs
+              .map((task) => Task.fromSnapshot(task, course.id!))
+              .toList();
 
           List<Task> regTasksStatus = [];
 

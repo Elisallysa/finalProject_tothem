@@ -7,25 +7,35 @@ class TasksScreenState extends Equatable {
   final Course course;
   final List<Content> contents;
   final List<Task> tasks;
+  final List<Course> coursesAndTasks;
 
-  const TasksScreenState(
+  const TasksScreenState(this.coursesAndTasks,
       {required this.course, required this.contents, required this.tasks});
+
   @override
-  List<Object?> get props => [course, contents, tasks];
+  List<Object?> get props => [course, contents, tasks, coursesAndTasks];
+
+  // Método para restablecer los atributos a su estado inicial
+  TasksScreenState reset() {
+    return const TasksScreenState(<Course>[],
+        course: Course(), contents: <Content>[], tasks: <Task>[]);
+  }
 }
 
 class InitStates extends TasksScreenState {
   const InitStates()
       : super(
-            course: const Course(),
-            contents: const <Content>[],
-            tasks: const <Task>[]);
+          const <Course>[],
+          course: const Course(),
+          contents: const <Content>[],
+          tasks: const <Task>[],
+        );
 }
 
 class CourseError extends TasksScreenState {
   final String error;
 
-  const CourseError(
+  const CourseError(super.coursesAndTasks,
       {required super.course,
       required super.contents,
       required super.tasks,
@@ -40,14 +50,13 @@ class CourseLoaded extends TasksScreenState {
       {required Course course,
       required List<Content> contents,
       required List<Task> tasks})
-      : super(course: course, contents: contents, tasks: tasks);
+      : super(const <Course>[],
+            course: course, contents: contents, tasks: tasks);
 }
 
 class AllTasksLoaded extends TasksScreenState {
-  final List<Course> coursesAndTasks;
-
-  const AllTasksLoaded({required this.coursesAndTasks})
-      : super(
+  const AllTasksLoaded({required List<Course> coursesAndTasks})
+      : super(coursesAndTasks,
             course: const Course(),
             contents: const <Content>[],
             tasks: const <Task>[]);

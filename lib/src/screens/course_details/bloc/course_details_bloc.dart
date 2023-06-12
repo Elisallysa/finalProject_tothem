@@ -97,7 +97,7 @@ class CourseDetailsBloc extends Bloc<CourseDetailsEvent, CourseDetailsState> {
       CheckboxChangedEvent event, Emitter<CourseDetailsState> emit) async {
     try {
       final updatedContents = state.contents.map((content) {
-        final updatedTasks = content.tasks.map((task) {
+        final contentTasks = content.tasks.map((task) {
           if (task.id == event.taskId) {
             // Crear una nueva instancia de Task con el estado actualizado
             final updatedTask = Task(
@@ -120,7 +120,7 @@ class CourseDetailsBloc extends Bloc<CourseDetailsEvent, CourseDetailsState> {
           title: content.title,
           description: content.description,
           attachments: content.attachments,
-          tasks: updatedTasks,
+          tasks: contentTasks,
         );
 
         return updatedContent;
@@ -132,16 +132,17 @@ class CourseDetailsBloc extends Bloc<CourseDetailsEvent, CourseDetailsState> {
         event.isChecked,
       );
 
-      List<Task> updatedTasks = state.tasks;
+      List<Task> updatedTasksList = [];
+      updatedTasksList.addAll(state.tasks);
       if (updatedTask != null) {
-        updatedTasks.removeWhere((element) => element.id == updatedTask.id);
-        updatedTasks.add(updatedTask);
+        updatedTasksList.removeWhere((element) => element.id == updatedTask.id);
+        updatedTasksList.add(updatedTask);
       }
 
       emit(CourseLoaded(
         course: state.course,
         contents: updatedContents,
-        tasks: updatedTasks,
+        tasks: updatedTasksList,
         students: state.students,
       ));
     } catch (error) {

@@ -86,7 +86,16 @@ class Task {
     return task;
   }
 
-  static Task fromSnapshot(DocumentSnapshot snap) {
+  static Task fromSimpleMap(Map<String, dynamic> data) {
+    Task task = Task(
+      id: data['id'],
+      done: data['done'],
+    );
+
+    return task;
+  }
+
+  static Task fromSnapshot(DocumentSnapshot snap, String courseRef) {
     Timestamp created = snap['create_date'];
     Timestamp posted = snap['publication_date'];
     Timestamp due = snap['due_date'];
@@ -102,7 +111,7 @@ class Task {
       }
     } catch (e) {
       if (e is StateError) {
-        print("No hay atributo attachments: ${e.message}");
+        print("Mapeando Task. No hay atributo \"attachments\": ${e.message}");
       } else {
         // Manejar otros tipos de excepciones si es necesario
         print("Ocurrió un error inesperado: $e");
@@ -114,8 +123,7 @@ class Task {
       }
     } catch (e) {
       if (e is StateError) {
-        print(
-            "Mapeando Task de colección \"courses\". No existe atributo \"done\". ${e.message}");
+        print("Mapeando Task. No existe atributo \"done\". ${e.message}");
       } else {
         // Manejar otros tipos de excepciones si es necesario
         print("Ocurrió un error inesperado: $e");
@@ -134,6 +142,7 @@ class Task {
         id: snap['id'],
         title: snap['title'],
         description: snap['description'],
+        courseRef: courseRef,
         done: done,
         createDate: created.toDate(),
         postDate: posted.toDate(),

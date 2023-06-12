@@ -5,21 +5,30 @@ import 'package:intl/intl.dart';
 import 'package:tothem/src/common/theme/tothem_theme.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:tothem/src/models/task.dart';
-import 'package:tothem/src/screens/course_details/bloc/course_details_bloc.dart';
-import 'package:tothem/src/screens/course_details/bloc/course_details_event.dart';
+import 'package:tothem/src/screens/course_details/bloc/course_details_bloc.dart'
+    as cDeetsBl;
+import 'package:tothem/src/screens/course_details/bloc/course_details_event.dart'
+    as cDeetsEv;
+import 'package:tothem/src/screens/tasks_screen/bloc/tasks_screen_bloc.dart'
+    as tScBl;
+import 'package:tothem/src/screens/tasks_screen/bloc/tasks_screen_event.dart'
+    as tScEv;
+import 'package:tothem/src/screens/tasks_screen/tasks_screen.dart';
 
 class TaskCard extends StatelessWidget {
   final String courseId;
   final Task task;
   final bool isChecked;
   final Function checkboxFunction;
+  final bool clickedOnTasksScreen;
 
   const TaskCard(
       {Key? key,
       required this.courseId,
       required this.task,
       required this.isChecked,
-      required this.checkboxFunction})
+      required this.checkboxFunction,
+      required this.clickedOnTasksScreen})
       : super(key: key);
 
   @override
@@ -59,11 +68,25 @@ class TaskCard extends StatelessWidget {
                   fillColor: MaterialStateProperty.resolveWith(getColor),
                   value: isChecked,
                   onChanged: (bool? value) {
-                    final event = CheckboxChangedEvent(
-                        courseId: courseId,
-                        isChecked: value ?? false,
-                        taskId: task.id);
-                    BlocProvider.of<CourseDetailsBloc>(context).add(event);
+                    if (clickedOnTasksScreen) {
+                      final taskEvent = tScEv.CheckboxChangedEvent(
+                          courseId: courseId,
+                          isChecked: value ?? false,
+                          taskId: task.id);
+                      BlocProvider.of<tScBl.TasksScreenBloc>(context)
+                          .add(taskEvent);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => TasksScreen()),
+                      );
+                    } else {
+                      final courseDeetsEvent = cDeetsEv.CheckboxChangedEvent(
+                          courseId: courseId,
+                          isChecked: value ?? false,
+                          taskId: task.id);
+                      BlocProvider.of<cDeetsBl.CourseDetailsBloc>(context)
+                          .add(courseDeetsEvent);
+                    }
                   }),
               title: Text(task.title, style: TothemTheme.tileTitle),
               subtitle:

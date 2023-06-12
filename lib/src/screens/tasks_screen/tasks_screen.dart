@@ -8,7 +8,7 @@ import 'package:tothem/src/common/widgets/tothem_common_widgets.dart';
 import 'package:tothem/src/models/course.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:tothem/src/models/task.dart';
-import 'package:tothem/src/screens/course_details/widgets/task_card.dart';
+import 'package:tothem/src/common/widgets/task_card.dart';
 import 'package:tothem/src/screens/tasks_screen/bloc/tasks_screen_bloc.dart';
 import 'package:tothem/src/screens/tasks_screen/bloc/tasks_screen_event.dart';
 import 'package:tothem/src/screens/tasks_screen/bloc/tasks_screen_state.dart';
@@ -139,19 +139,19 @@ ListView courseTasksListView(
           return Column(
               children: filteredTasks.map((task) {
             return TaskCard(
-              checkboxFunction: (bool value, context) {
-                context.read<TasksScreenBloc>().add(
-                      CheckboxChangedEvent(
-                        courseId: course.id!,
-                        taskId: task.id,
-                        isChecked: value,
-                      ),
-                    );
-              },
-              task: task,
-              isChecked: task.done,
-              courseId: course.id!,
-            );
+                checkboxFunction: (bool value, context) {
+                  context.read<TasksScreenBloc>().add(
+                        CheckboxChangedEvent(
+                          courseId: course.id!,
+                          taskId: task.id,
+                          isChecked: value,
+                        ),
+                      );
+                },
+                task: task,
+                isChecked: task.done,
+                courseId: course.id!,
+                clickedOnTasksScreen: true);
           }).toList());
         } else {
           String message = '';
@@ -205,19 +205,19 @@ ListView tasksListView(List<Course> courseList, bool? doneNotDone) {
           return Column(
               children: filteredTasks.map((task) {
             return TaskCard(
-              checkboxFunction: (bool value, context) {
-                context.read<TasksScreenBloc>().add(
-                      CheckboxChangedEvent(
-                        courseId: courseRefs[task.courseRef] ?? '',
-                        taskId: task.id,
-                        isChecked: value,
-                      ),
-                    );
-              },
-              task: task,
-              isChecked: task.done,
-              courseId: courseRefs[task.courseRef] ?? '',
-            );
+                checkboxFunction: (bool value, context) {
+                  context.read<TasksScreenBloc>().add(
+                        CheckboxChangedEvent(
+                          courseId: task.courseRef,
+                          taskId: task.id,
+                          isChecked: value,
+                        ),
+                      );
+                },
+                task: task,
+                isChecked: task.done,
+                courseId: task.courseRef,
+                clickedOnTasksScreen: true);
           }).toList());
         } else {
           String message = '';
